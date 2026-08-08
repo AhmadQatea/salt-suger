@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
- * SEO helpers for public pages (Phases 1–2).
+ * SEO helpers for public pages and local business metadata.
  */
 class Seo
 {
@@ -124,17 +124,11 @@ class Seo
         return asset('images/logo.png');
     }
 
-    /**
-     * Preferred share/OG image for later phases (Hero → logo fallback).
-     */
     public function imageUrl(): string
     {
         return $this->settings->heroImageUrl($this->logoUrl());
     }
 
-    /**
-     * Public contact telephone from restaurant WhatsApp settings, when available.
-     */
     public function telephone(): ?string
     {
         $number = preg_replace('/\D+/', '', (string) $this->settings->whatsapp_number);
@@ -148,6 +142,62 @@ class Seo
         }
 
         return '+'.$number;
+    }
+
+    public function locality(): string
+    {
+        return (string) config('seo.city_en', 'Idlib');
+    }
+
+    public function countryCode(): string
+    {
+        return (string) config('seo.country_code', 'SY');
+    }
+
+    /**
+     * Public FastFoodRestaurant JSON-LD for local SEO (Idlib, Syria only).
+     *
+     * @return array<string, mixed>
+     */
+    public function restaurantJsonLd(?string $pageUrl = null): array
+    {
+        $name = $this->restaurantName();
+        $url = $this->absoluteUrl($pageUrl ?? route('home'));
+        $logo = $this->absoluteUrl($this->logoUrl());
+        $image = $this->absoluteUrl($this->imageUrl());
+        $description = $this->homeDescription();
+
+        $data = [
+            '@context' => 'https://schema.org',
+            '@type' => 'FastFoodRestaurant',
+            '@id' => $url.'#restaurant',
+            'name' => $name,
+            'alternateName' => [
+                'Salt&Suger',
+                'مطعم حلو ومالح',
+            ],
+            'description' => $description,
+            'url' => $url,
+            'image' => [$image],
+            'logo' => $logo,
+            'servesCuisine' => config('seo.cuisine'),
+            'address' => [
+                '@type' => 'PostalAddress',
+                'addressLocality' => $this->locality(),
+                'addressCountry' => $this->countryCode(),
+            ],
+            'areaServed' => [
+                '@type' => 'City',
+                'name' => $this->locality(),
+            ],
+        ];
+
+        $phone = $this->telephone();
+        if ($phone) {
+            $data['telephone'] = $phone;
+        }
+
+        return $data;
     }
 
     public function absoluteUrl(?string $url = null): string

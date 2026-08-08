@@ -42,6 +42,12 @@ class Product extends Model
         ];
     }
 
+    protected static function booted(): void
+    {
+        static::saved(fn () => Category::flushMenuCache());
+        static::deleted(fn () => Category::flushMenuCache());
+    }
+
     /**
      * @return BelongsTo<Category, $this>
      */

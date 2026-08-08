@@ -13,7 +13,7 @@
         <a href="{{ route('menu.index') }}" class="flex min-w-0 items-center gap-2.5">
             <img
                 src="{{ $logoUrl }}"
-                alt="شعار مطعم {{ $restaurantName }}"
+                alt="شعار {{ $restaurantName }}"
                 class="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-outline-variant/50 md:h-10 md:w-10"
                 width="40"
                 height="40"

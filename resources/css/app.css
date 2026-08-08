@@ -1,4 +1,10 @@
 @import 'tailwindcss';
+@import '@fontsource/cairo/arabic-400.css';
+@import '@fontsource/cairo/arabic-600.css';
+@import '@fontsource/cairo/arabic-700.css';
+@import '@fontsource/cairo/latin-400.css';
+@import '@fontsource/cairo/latin-600.css';
+@import '@fontsource/cairo/latin-700.css';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -187,18 +193,38 @@ html.dark {
         @apply fixed inset-0 z-[100] flex items-center justify-center bg-background/92 backdrop-blur-[2px] transition-opacity duration-200 ease-out;
     }
 
-    .ss-page-loader.is-hidden {
+    .ss-page-loader.is-hidden,
+    .ss-page-loader.is-fast-nav,
+    .ss-page-loader[hidden] {
         @apply pointer-events-none opacity-0;
+        visibility: hidden;
     }
 
     .ss-page-loader__mark {
-        @apply flex h-24 w-24 items-center justify-center rounded-full;
-        animation: ss-loader-pulse 1.4s ease-in-out infinite;
+        @apply relative flex h-40 w-40 items-center justify-center;
+    }
+
+    .ss-page-loader__ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        background: conic-gradient(
+            from 0deg,
+            #ffd400 0deg,
+            #ff2a1f 90deg,
+            #0a0a0a 180deg,
+            #ffd400 270deg,
+            #ff2a1f 360deg
+        );
+        animation: ss-loader-spin 0.85s linear infinite;
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+        mask: radial-gradient(farthest-side, transparent calc(100% - 7px), #000 calc(100% - 6px));
+        filter: saturate(1.25) brightness(1.05);
     }
 
     .ss-page-loader__logo {
-        @apply h-20 w-20 rounded-full object-cover shadow-md;
-        animation: ss-loader-spin 2.4s linear infinite;
+        @apply relative z-10 h-32 w-32 rounded-full object-cover shadow-lg ring-2 ring-black/10;
+        animation: none;
     }
 
     @keyframes ss-loader-spin {
@@ -210,21 +236,8 @@ html.dark {
         }
     }
 
-    @keyframes ss-loader-pulse {
-        0%,
-        100% {
-            transform: scale(1);
-            opacity: 1;
-        }
-        50% {
-            transform: scale(1.04);
-            opacity: 0.92;
-        }
-    }
-
     @media (prefers-reduced-motion: reduce) {
-        .ss-page-loader__mark,
-        .ss-page-loader__logo {
+        .ss-page-loader__ring {
             animation: none;
         }
     }
@@ -245,6 +258,8 @@ html.dark {
 
     .menu-product-card {
         box-shadow: var(--ss-card-shadow);
+        content-visibility: auto;
+        contain-intrinsic-size: auto 380px;
     }
 
     .menu-product-card:hover {

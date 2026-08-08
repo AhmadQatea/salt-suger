@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
 class Category extends Model
 {
     /** @use HasFactory<CategoryFactory> */
     use HasFactory;
+
+    public const MENU_CACHE_KEY = 'menu.active_categories_with_products';
 
     /**
      * @var list<string>
@@ -35,6 +38,17 @@ class Category extends Model
             'is_active' => 'boolean',
             'sort_order' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(fn () => static::flushMenuCache());
+        static::deleted(fn () => static::flushMenuCache());
+    }
+
+    public static function flushMenuCache(): void
+    {
+        Cache::forget(self::MENU_CACHE_KEY);
     }
 
     /**

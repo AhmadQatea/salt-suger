@@ -5,6 +5,7 @@
 
 @php
     $restaurantName = $settings->restaurant_name ?: config('app.name');
+    $whatsapp = $settings->whatsapp_enabled ? trim((string) $settings->whatsapp_number) : '';
 @endphp
 
 <footer class="border-t border-outline-variant/40 bg-surface-container-low">
@@ -13,8 +14,12 @@
             <div class="max-w-lg space-y-2">
                 <p class="text-base font-bold text-on-surface">{{ $restaurantName }}</p>
                 <p class="text-sm leading-relaxed text-on-surface-variant">
-                    مطعم وجبات سريعة في إدلب، سوريا — برجر وساندويشات بنكهات خاصة، مع تشكيلة من الوجبات والمقبلات والمشروبات.
+                    مطعم حلو ومالح ووجبات سريعة في إدلب — برجر وساندويشات بنكهات خاصة.
                 </p>
+                <p class="text-sm text-on-surface-variant">إدلب، سوريا</p>
+                @if ($whatsapp !== '')
+                    <p class="text-sm text-on-surface-variant">واتساب: {{ $whatsapp }}</p>
+                @endif
             </div>
 
             <nav aria-label="روابط مفيدة" class="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">

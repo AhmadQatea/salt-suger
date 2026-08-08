@@ -17,6 +17,7 @@
         :image="$seoImage ?? $seoHelper->imageUrl()"
         :robots="$seoRobots ?? 'index,follow'"
         :site-name="$seoSettings->restaurant_name ?? config('app.name')"
+        :json-ld="$seoJsonLd ?? []"
     />
 
     <x-site-icons :settings="$seoSettings" />
@@ -37,12 +38,18 @@
         })();
     </script>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    {{-- Icons are non-critical for LCP; load after first paint --}}
+    <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap"
+        media="print"
+        onload="this.media='all'"
+    >
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    </noscript>
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/app.css', 'resources/js/public.js'])
 
     <style>
         :root {
@@ -52,6 +59,7 @@
         }
     </style>
 
+    @stack('head')
     @stack('styles')
 </head>
 <body class="bg-background text-on-background font-sans antialiased pb-24 md:pb-0 min-h-screen overflow-x-hidden">

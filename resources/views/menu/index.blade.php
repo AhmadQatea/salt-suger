@@ -4,6 +4,12 @@
     $restaurantName = $settings->restaurant_name ?: config('app.name');
 @endphp
 
+@push('head')
+    @if (! empty($heroUrl))
+        <link rel="preload" as="image" href="{{ $heroUrl }}" fetchpriority="high">
+    @endif
+@endpush
+
 @section('content')
     <x-menu.header :settings="$settings" :logo-url="$logoUrl" />
 
@@ -30,6 +36,10 @@
             @if ($selectedCategory && $selectedCategory->description)
                 <p class="mb-5 max-w-3xl text-sm leading-relaxed text-on-surface-variant md:text-base">
                     {{ $selectedCategory->description }}
+                </p>
+            @elseif (! $selectedCategory)
+                <p class="mb-5 max-w-3xl text-sm leading-relaxed text-on-surface-variant md:text-base">
+                    برجر ووجبات سريعة بنكهات حلوة ومالحة — اختر من منيو {{ $restaurantName }} واطلب بسهولة.
                 </p>
             @endif
 

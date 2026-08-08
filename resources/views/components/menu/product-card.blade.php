@@ -10,7 +10,7 @@
     $imageUrl = $product->imageUrl() ?: $fallbackImage;
     $formattedPrice = Money::format($product->price, $currency);
     $brand = $restaurantName ?: config('app.name');
-    $imageAlt = $product->name.' من '.$brand.' في إدلب';
+    $imageAlt = $product->name.' من '.$brand;
 @endphp
 
 <article

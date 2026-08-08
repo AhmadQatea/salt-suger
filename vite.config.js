@@ -5,11 +5,28 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
     plugins: [
         laravel({
-            input: ['resources/css/app.css', 'resources/js/app.js'],
+            input: [
+                'resources/css/app.css',
+                'resources/js/public.js',
+                'resources/js/admin.js',
+                'resources/js/app.js',
+            ],
             refresh: true,
         }),
         tailwindcss(),
     ],
+    build: {
+        cssCodeSplit: true,
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (id.includes('node_modules/@fontsource')) {
+                        return 'fonts';
+                    }
+                },
+            },
+        },
+    },
     server: {
         watch: {
             ignored: ['**/storage/framework/views/**'],

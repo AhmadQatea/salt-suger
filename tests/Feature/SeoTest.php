@@ -38,11 +38,8 @@ class SeoTest extends TestCase
 
         $response = $this->get(route('home'))->assertOk();
 
-        $response->assertSee('<title>مطعم Salt&amp;Suger | برجر ووجبات سريعة في إدلب، سوريا</title>', false);
-        $response->assertSee(
-            'Salt&amp;Suger مطعم وجبات سريعة في إدلب يقدم البرجر والساندويشات والوجبات بنكهات خاصة.',
-            false
-        );
+        $response->assertSee('<title>Salt&amp;Suger | مطعم حلو ومالح وبرجر في إدلب</title>', false);
+        $response->assertSee('مطعم حلو ومالح ووجبات سريعة في إدلب', false);
         $response->assertSee('rel="canonical"', false);
         $response->assertSee('href="'.route('home').'"', false);
     }
@@ -79,7 +76,7 @@ class SeoTest extends TestCase
         $menu = $this->get(route('menu.index'))->assertOk()->getContent();
 
         $this->assertStringContainsString(
-            '<title>مطعم Salt&amp;Suger | برجر ووجبات سريعة في إدلب، سوريا</title>',
+            '<title>Salt&amp;Suger | مطعم حلو ومالح وبرجر في إدلب</title>',
             $home
         );
         $this->assertStringContainsString(
@@ -110,7 +107,7 @@ class SeoTest extends TestCase
         $response = $this->get(route('menu.category', $burgers))->assertOk();
 
         $response->assertSee('<title>برغر | منيو Salt&amp;Suger في إدلب</title>', false);
-        $response->assertSee('اكتشف تشكيلة برغر من Salt&amp;Suger في إدلب', false);
+        $response->assertSee('اكتشف تشكيلة برغر من Salt&amp;Suger', false);
         $response->assertSee('href="'.route('menu.category', $burgers).'"', false);
     }
 
@@ -211,5 +208,33 @@ class SeoTest extends TestCase
             ->get(route('admin.dashboard'))
             ->assertOk()
             ->assertSee('noindex,nofollow', false);
+    }
+
+    public function test_homepage_local_seo_includes_brand_idlib_and_restaurant_json_ld(): void
+    {
+        $this->seedRestaurant();
+
+        $response = $this->get(route('home'))->assertOk();
+        $html = $response->getContent();
+
+        $response->assertSee('Salt&Suger', false);
+        $response->assertSee('إدلب', false);
+        $response->assertSee('حلو ومالح', false);
+        $response->assertSee('FastFoodRestaurant', false);
+        $response->assertSee('"addressLocality":"Idlib"', false);
+        $response->assertSee('"addressCountry":"SY"', false);
+        $this->assertStringNotContainsString('aggregateRating', $html);
+        $this->assertStringNotContainsString('customer_phone', $html);
+        $this->assertStringNotContainsString('admin@gmail.com', $html);
+    }
+
+    public function test_footer_shows_local_business_information(): void
+    {
+        $this->seedRestaurant();
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('إدلب، سوريا', false)
+            ->assertSee('مطعم حلو ومالح ووجبات سريعة في إدلب', false);
     }
 }

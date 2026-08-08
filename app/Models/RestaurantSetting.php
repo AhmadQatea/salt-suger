@@ -80,7 +80,7 @@ class RestaurantSetting extends Model
     {
         return new static([
             'restaurant_name' => config('app.name', 'Salt&Suger'),
-            'description' => 'Salt&Suger مطعم وجبات سريعة في إدلب يقدم برجر لذيذ بنكهات خاصة، مع ساندويشات ووجبات متنوعة.',
+            'description' => 'Salt&Suger مطعم حلو ومالح ووجبات سريعة في إدلب يقدم البرجر والساندويشات والوجبات بنكهات خاصة.',
             'currency' => 'ل.س',
             'primary_color' => '#ba0013',
             'secondary_color' => '#111111',

@@ -7,7 +7,9 @@ use App\Models\RestaurantSetting;
 use App\Support\Seo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
 class MenuController extends Controller
@@ -34,26 +36,7 @@ class MenuController extends Controller
             abort(404);
         }
 
-        $categories = Category::query()
-            ->active()
-            ->select(['id', 'name', 'slug', 'description', 'image', 'sort_order', 'is_active', 'updated_at'])
-            ->with(['availableProducts' => function ($query) {
-                $query->select([
-                    'id',
-                    'category_id',
-                    'name',
-                    'slug',
-                    'description',
-                    'price',
-                    'image',
-                    'badge',
-                    'is_available',
-                    'sort_order',
-                ])->orderBy('sort_order')->orderBy('name');
-            }])
-            ->orderBy('sort_order')
-            ->orderBy('name')
-            ->get();
+        $categories = $this->cachedMenuCategories();
 
         $selectedCategory = null;
         $selectedSlug = '';
@@ -104,12 +87,46 @@ class MenuController extends Controller
             'seoCanonical' => $seoCanonical,
             'seoImage' => $seo->absoluteUrl($seo->imageUrl()),
             'seoRobots' => 'index,follow',
+            'seoJsonLd' => [
+                $seo->restaurantJsonLd($seoCanonical),
+            ],
         ]);
     }
 
     protected function settings(): RestaurantSetting
     {
         return RestaurantSetting::cached();
+    }
+
+    /**
+     * Active categories + available products for the public menu (cache invalidated on catalog changes).
+     *
+     * @return Collection<int, Category>
+     */
+    protected function cachedMenuCategories(): Collection
+    {
+        return Cache::remember(Category::MENU_CACHE_KEY, now()->addMinutes(30), function () {
+            return Category::query()
+                ->active()
+                ->select(['id', 'name', 'slug', 'description', 'image', 'sort_order', 'is_active', 'updated_at'])
+                ->with(['availableProducts' => function ($query) {
+                    $query->select([
+                        'id',
+                        'category_id',
+                        'name',
+                        'slug',
+                        'description',
+                        'price',
+                        'image',
+                        'badge',
+                        'is_available',
+                        'sort_order',
+                    ])->orderBy('sort_order')->orderBy('name');
+                }])
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get();
+        });
     }
 
     protected function logoUrl(RestaurantSetting $settings): string

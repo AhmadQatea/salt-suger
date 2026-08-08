@@ -1,6 +1,8 @@
-const LOADER_MIN_MS = 1000;
-const LOADER_MAX_MS = 5000;
-const startedAt = Date.now();
+/**
+ * Branded page loader.
+ * Filter/category navigations set sessionStorage ss-fast-nav to skip the loader.
+ */
+const LOADER_MAX_MS = 3500;
 
 function hidePageLoader() {
     const loader = document.getElementById('ss-page-loader');
@@ -14,21 +16,31 @@ function hidePageLoader() {
 
     window.setTimeout(() => {
         loader.remove();
-    }, 280);
+    }, 180);
 }
 
-function scheduleHide() {
-    const elapsed = Date.now() - startedAt;
-    const remaining = Math.max(0, LOADER_MIN_MS - elapsed);
+document.addEventListener('click', (event) => {
+    const link = event.target instanceof Element
+        ? event.target.closest('a[data-fast-nav]')
+        : null;
 
-    window.setTimeout(hidePageLoader, remaining);
-}
+    if (! link) {
+        return;
+    }
 
-if (document.readyState === 'complete') {
-    scheduleHide();
+    try {
+        sessionStorage.setItem('ss-fast-nav', '1');
+    } catch (e) {
+        // Ignore private-mode storage failures.
+    }
+}, { capture: true, passive: true });
+
+if (window.__ssFastNav) {
+    const loader = document.getElementById('ss-page-loader');
+    loader?.remove();
+} else if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', hidePageLoader, { once: true });
+    window.setTimeout(hidePageLoader, LOADER_MAX_MS);
 } else {
-    window.addEventListener('load', scheduleHide, { once: true });
+    hidePageLoader();
 }
-
-// Fallback if load is delayed by a hanging asset.
-window.setTimeout(hidePageLoader, LOADER_MAX_MS);
