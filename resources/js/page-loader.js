@@ -1,3 +1,7 @@
+const LOADER_MIN_MS = 1000;
+const LOADER_MAX_MS = 5000;
+const startedAt = Date.now();
+
 function hidePageLoader() {
     const loader = document.getElementById('ss-page-loader');
 
@@ -13,11 +17,18 @@ function hidePageLoader() {
     }, 280);
 }
 
+function scheduleHide() {
+    const elapsed = Date.now() - startedAt;
+    const remaining = Math.max(0, LOADER_MIN_MS - elapsed);
+
+    window.setTimeout(hidePageLoader, remaining);
+}
+
 if (document.readyState === 'complete') {
-    hidePageLoader();
+    scheduleHide();
 } else {
-    window.addEventListener('load', hidePageLoader, { once: true });
+    window.addEventListener('load', scheduleHide, { once: true });
 }
 
 // Fallback if load is delayed by a hanging asset.
-window.setTimeout(hidePageLoader, 4000);
+window.setTimeout(hidePageLoader, LOADER_MAX_MS);
