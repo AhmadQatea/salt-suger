@@ -4,8 +4,23 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', ($settings->restaurant_name ?? config('app.name')).' | المنيو')</title>
-    <meta name="description" content="@yield('meta_description', $settings->description ?? 'القائمة الرقمية لمطعم '.($settings->restaurant_name ?? config('app.name')))">
+
+    @php
+        $seoSettings = $settings ?? \App\Models\RestaurantSetting::cached();
+        $seoHelper = \App\Support\Seo::fromSettings($seoSettings);
+        $defaultSeoImage = $seoHelper->absoluteUrl($seoHelper->shareImageUrl());
+    @endphp
+
+    <x-seo
+        :title="$seoTitle ?? (($seoSettings->restaurant_name ?? config('app.name')).' | المنيو')"
+        :description="$seoDescription ?? $seoHelper->homeDescription()"
+        :canonical="$seoCanonical ?? url()->current()"
+        :image="$seoImage ?? $defaultSeoImage"
+        :robots="$seoRobots ?? 'index,follow'"
+        :type="$seoType ?? 'website'"
+        :site-name="$seoSettings->restaurant_name ?? config('app.name')"
+        :json-ld="$seoJsonLd ?? []"
+    />
 
     {{-- Prevent theme flash before CSS/JS load --}}
     <script>
@@ -26,15 +41,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+    </noscript>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
         :root {
-            --menu-primary: {{ $settings->primary_color ?? '#ba0013' }};
-            --menu-secondary: {{ $settings->secondary_color ?? '#111111' }};
-            --menu-accent: {{ $settings->accent_color ?? '#cca800' }};
+            --menu-primary: {{ $seoSettings->primary_color ?? '#ba0013' }};
+            --menu-secondary: {{ $seoSettings->secondary_color ?? '#111111' }};
+            --menu-accent: {{ $seoSettings->accent_color ?? '#cca800' }};
         }
     </style>
 

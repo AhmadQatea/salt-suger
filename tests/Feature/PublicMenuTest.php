@@ -157,6 +157,9 @@ class PublicMenuTest extends TestCase
         ]);
 
         $this->get(route('menu.index', ['category' => 'burger']))
+            ->assertRedirect(route('menu.category', $burgers));
+
+        $this->get(route('menu.category', $burgers))
             ->assertOk()
             ->assertSee('برغر كلاسيك', false)
             ->assertDontSee('بيتزا مارغريتا', false);
@@ -183,6 +186,8 @@ class PublicMenuTest extends TestCase
             ->assertOk()
             ->assertDontSee('صنف مخفي', false)
             ->assertDontSee('مخفي', false);
+
+        $this->get('/menu/hidden')->assertNotFound();
     }
 
     public function test_invalid_category_slug_fails_gracefully(): void
@@ -244,7 +249,7 @@ class PublicMenuTest extends TestCase
             'is_active' => true,
         ]);
 
-        $this->get(route('menu.index', ['category' => 'drinks']))
+        $this->get(route('menu.category', $category))
             ->assertOk()
             ->assertSee('لا توجد أصناف متاحة ضمن هذا التصنيف.', false);
 

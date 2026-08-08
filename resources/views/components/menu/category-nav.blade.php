@@ -17,7 +17,7 @@
 
         @foreach ($categories as $category)
             <a
-                href="{{ route('menu.index', ['category' => $category->slug]) }}"
+                href="{{ route('menu.category', $category) }}"
                 @class([
                     'ss-chip shrink-0',
                     'ss-chip-active' => $selectedSlug === $category->slug,

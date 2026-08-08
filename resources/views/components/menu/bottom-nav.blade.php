@@ -10,10 +10,10 @@
         href="{{ route('menu.index') }}"
         @class([
             'flex min-w-20 flex-col items-center justify-center rounded-xl px-3 py-2 transition-colors',
-            'bg-primary/10 text-primary' => request()->routeIs('home', 'menu.index'),
-            'text-on-surface-variant' => ! request()->routeIs('home', 'menu.index'),
+            'bg-primary/10 text-primary' => request()->routeIs('home', 'menu.index', 'menu.category'),
+            'text-on-surface-variant' => ! request()->routeIs('home', 'menu.index', 'menu.category'),
         ])
-        @if (request()->routeIs('home', 'menu.index')) aria-current="page" @endif
+        @if (request()->routeIs('home', 'menu.index', 'menu.category')) aria-current="page" @endif
     >
         <span class="material-symbols-outlined text-[22px]" aria-hidden="true">home</span>
         <span class="mt-0.5 text-[11px] font-medium">الرئيسية</span>

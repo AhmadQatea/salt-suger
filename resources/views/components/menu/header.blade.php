@@ -13,7 +13,7 @@
         <a href="{{ route('menu.index') }}" class="flex min-w-0 items-center gap-2.5">
             <img
                 src="{{ $logoUrl }}"
-                alt="{{ $restaurantName }}"
+                alt="شعار مطعم {{ $restaurantName }}"
                 class="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-outline-variant/50 md:h-10 md:w-10"
                 width="40"
                 height="40"
@@ -28,8 +28,8 @@
                 href="{{ route('menu.index') }}"
                 @class([
                     'rounded-lg px-3 py-2 text-sm font-semibold transition-colors',
-                    'bg-primary/10 text-primary' => request()->routeIs('home', 'menu.index'),
-                    'text-on-surface-variant hover:bg-surface-variant hover:text-on-surface' => ! request()->routeIs('home', 'menu.index'),
+                    'bg-primary/10 text-primary' => request()->routeIs('home', 'menu.index', 'menu.category'),
+                    'text-on-surface-variant hover:bg-surface-variant hover:text-on-surface' => ! request()->routeIs('home', 'menu.index', 'menu.category'),
                 ])
             >الرئيسية</a>
             <a

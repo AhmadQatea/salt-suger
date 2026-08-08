@@ -3,9 +3,10 @@
 @php
     use App\Support\Money;
     $restaurantName = $settings->restaurant_name ?: config('app.name');
+    $seoTitle = 'تم حفظ طلبك — '.$restaurantName;
+    $seoDescription = 'تأكيد طلبك من '.$restaurantName.'. هذه الصفحة غير مخصصة لمحركات البحث.';
+    $seoRobots = 'noindex,nofollow';
 @endphp
-
-@section('title', 'تم حفظ طلبك — '.$restaurantName)
 
 @section('content')
     <x-menu.header :settings="$settings" :logo-url="$logoUrl" />

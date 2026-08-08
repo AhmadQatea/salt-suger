@@ -11,7 +11,17 @@ use App\Http\Controllers\Admin\RestaurantSettingController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\RobotsController;
+use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| SEO
+|--------------------------------------------------------------------------
+*/
+Route::get('/robots.txt', RobotsController::class)->name('robots');
+Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 
 /*
 |--------------------------------------------------------------------------
@@ -20,6 +30,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', [MenuController::class, 'index'])->name('home');
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
+Route::get('/menu/{category:slug}', [MenuController::class, 'index'])->name('menu.category');
 
 /*
 |--------------------------------------------------------------------------

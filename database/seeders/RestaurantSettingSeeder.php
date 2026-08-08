@@ -18,7 +18,7 @@ class RestaurantSettingSeeder extends Seeder
                 'restaurant_name' => 'Salt&Suger',
                 'logo' => null,
                 'favicon' => null,
-                'description' => 'مطعم Salt&Suger — ملح وسكر بنكهات لا تُنسى.',
+                'description' => 'Salt&Suger مطعم وجبات سريعة في إدلب يقدم برجر لذيذ بنكهات خاصة، مع ساندويشات ووجبات متنوعة.',
                 'whatsapp_number' => null,
                 'currency' => 'ل.س',
                 'primary_color' => '#c8102e',

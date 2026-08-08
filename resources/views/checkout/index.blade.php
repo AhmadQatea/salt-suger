@@ -3,9 +3,11 @@
 @php
     use App\Support\Money;
     $restaurantName = $settings->restaurant_name ?: config('app.name');
+    $seoTitle = 'إتمام الطلب — '.$restaurantName;
+    $seoDescription = 'إتمام طلبك من '.$restaurantName.' عبر واتساب. هذه الصفحة غير مخصصة لمحركات البحث.';
+    $seoRobots = 'noindex,nofollow';
+    $seoCanonical = route('checkout.index');
 @endphp
-
-@section('title', 'إتمام الطلب — '.$restaurantName)
 
 @section('content')
     <x-menu.header :settings="$settings" :logo-url="$logoUrl" />

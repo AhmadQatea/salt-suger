@@ -4,9 +4,11 @@
     use App\Support\Money;
     use Illuminate\Support\Facades\Storage;
     $restaurantName = $settings->restaurant_name ?: config('app.name');
+    $seoTitle = 'السلة — '.$restaurantName;
+    $seoDescription = 'سلة طلبك من '.$restaurantName.'. هذه الصفحة غير مخصصة لمحركات البحث.';
+    $seoRobots = 'noindex,nofollow';
+    $seoCanonical = route('cart.index');
 @endphp
-
-@section('title', 'السلة — '.$restaurantName)
 
 @section('content')
     <x-menu.header :settings="$settings" :logo-url="$logoUrl" />

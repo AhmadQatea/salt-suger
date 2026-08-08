@@ -4,9 +4,6 @@
     $restaurantName = $settings->restaurant_name ?: config('app.name');
 @endphp
 
-@section('title', $restaurantName.' | المنيو')
-@section('meta_description', $settings->description ?: ('القائمة الرقمية لمطعم '.$restaurantName))
-
 @section('content')
     <x-menu.header :settings="$settings" :logo-url="$logoUrl" />
 
@@ -15,6 +12,7 @@
             :settings="$settings"
             :logo-url="$logoUrl"
             :hero-url="$heroUrl"
+            :selected-category="$selectedCategory"
         />
 
         @if ($categories->isEmpty())
@@ -24,6 +22,16 @@
                 :categories="$categories"
                 :selected-slug="$selectedSlug"
             />
+
+            <h2 class="mb-4 text-lg font-bold text-on-surface md:text-xl">
+                {{ $selectedCategory ? $selectedCategory->name : 'المنيو' }}
+            </h2>
+
+            @if ($selectedCategory && $selectedCategory->description)
+                <p class="mb-5 max-w-3xl text-sm leading-relaxed text-on-surface-variant md:text-base">
+                    {{ $selectedCategory->description }}
+                </p>
+            @endif
 
             @if ($products->isEmpty())
                 <x-menu.empty-state
@@ -41,12 +49,15 @@
                             :product="$product"
                             :currency="$currency"
                             :fallback-image="$logoUrl"
+                            :restaurant-name="$restaurantName"
                         />
                     @endforeach
                 </section>
             @endif
         @endif
     </main>
+
+    <x-menu.footer :settings="$settings" :categories="$categories" />
 
     <x-menu.sticky-cart />
     <x-menu.bottom-nav />

@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', config('app.name'))</title>
+    <meta name="robots" content="noindex,nofollow">
 
     {{-- Prevent theme flash before CSS/JS load --}}
     <script>
