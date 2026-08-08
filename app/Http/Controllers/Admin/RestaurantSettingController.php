@@ -5,11 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateRestaurantSettingRequest;
 use App\Models\RestaurantSetting;
+use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class RestaurantSettingController extends Controller
 {
+    public function __construct(
+        protected ImageService $images,
+    ) {}
+
     public function edit(): View
     {
         $settings = RestaurantSetting::query()->first() ?? RestaurantSetting::query()->create([
@@ -21,10 +27,12 @@ class RestaurantSettingController extends Controller
             'accent_color' => '#cca800',
             'whatsapp_enabled' => false,
             'whatsapp_number' => null,
+            'hero_image' => null,
         ]);
 
         return view('admin.settings.edit', [
             'settings' => $settings,
+            'heroPreviewUrl' => $this->heroPreviewUrl($settings),
         ]);
     }
 
@@ -37,10 +45,33 @@ class RestaurantSettingController extends Controller
         }
 
         $settings->fill($request->settingsPayload());
+
+        if ($request->boolean('remove_hero_image') && ! $request->hasFile('hero_image')) {
+            $this->images->delete($settings->hero_image);
+            $settings->hero_image = null;
+        }
+
+        if ($request->hasFile('hero_image')) {
+            $settings->hero_image = $this->images->replace(
+                $request->file('hero_image'),
+                'restaurant/hero',
+                $settings->hero_image,
+            );
+        }
+
         $settings->save();
 
         return redirect()
             ->route('admin.settings.edit')
             ->with('status', 'تم حفظ إعدادات المطعم بنجاح.');
+    }
+
+    protected function heroPreviewUrl(RestaurantSetting $settings): ?string
+    {
+        if ($settings->hero_image && Storage::disk('public')->exists($settings->hero_image)) {
+            return asset('storage/'.$settings->hero_image);
+        }
+
+        return null;
     }
 }

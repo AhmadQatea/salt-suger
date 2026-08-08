@@ -10,9 +10,9 @@
 @section('content')
     <x-menu.header :settings="$settings" :logo-url="$logoUrl" />
 
-    <main class="mx-auto max-w-240 px-4 md:px-12 py-6 md:py-8 pb-28 md:pb-8">
+    <main class="mx-auto max-w-3xl px-4 py-5 pb-28 md:px-8 md:py-8 md:pb-10">
         @if ($errors->any())
-            <div class="mb-4 rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error" role="alert">
+            <div class="mb-4 rounded-xl bg-error/10 px-4 py-3 text-sm text-error" role="alert">
                 <ul class="list-disc pr-5">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -22,16 +22,16 @@
         @endif
 
         @unless ($whatsappAvailable)
-            <div class="mb-4 rounded-xl border border-error/30 bg-error/10 px-4 py-3 text-sm text-error" role="alert">
+            <div class="mb-4 rounded-xl bg-error/10 px-4 py-3 text-sm text-error" role="alert">
                 الطلب عبر واتساب غير متاح حالياً.
             </div>
         @endunless
 
-        <h1 class="mb-6 text-2xl font-bold text-primary md:text-3xl">إتمام الطلب</h1>
+        <h1 class="mb-5 text-2xl font-bold text-on-surface">إتمام الطلب</h1>
 
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
-            <section class="rounded-xl border border-surface-variant bg-surface-container-lowest p-6 shadow-sm">
-                <h2 class="mb-4 text-lg font-bold">ملخص الطلب</h2>
+        <div class="grid grid-cols-1 gap-5 lg:grid-cols-2">
+            <section class="rounded-2xl bg-surface-container-lowest p-5 ring-1 ring-outline-variant/25">
+                <h2 class="mb-4 text-lg font-bold text-on-surface">ملخص الطلب</h2>
                 <ul class="mb-4 space-y-3">
                     @foreach ($items as $item)
                         <li class="flex items-start justify-between gap-3 border-b border-surface-variant/60 pb-3 text-sm">
@@ -60,8 +60,8 @@
                 </a>
             </section>
 
-            <section class="rounded-xl border border-surface-variant bg-surface-container-lowest p-6 shadow-sm">
-                <h2 class="mb-4 text-lg font-bold">ملاحظات الطلب</h2>
+            <section class="rounded-2xl bg-surface-container-lowest p-5 ring-1 ring-outline-variant/25">
+                <h2 class="mb-4 text-lg font-bold text-on-surface">ملاحظات الطلب</h2>
 
                 <form
                     id="checkout-form"
@@ -73,13 +73,13 @@
                     @csrf
 
                     <div>
-                        <label for="notes" class="mb-1 block text-sm font-semibold">ملاحظات إضافية على الطلب</label>
+                        <label for="notes" class="mb-1 block text-sm font-medium text-on-surface-variant">ملاحظات إضافية على الطلب</label>
                         <textarea
                             id="notes"
                             name="notes"
-                            rows="4"
+                            rows="3"
                             maxlength="1000"
-                            class="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 text-sm"
+                            class="w-full rounded-xl border border-outline-variant/50 bg-surface px-4 py-3 text-sm"
                             placeholder="يرجى تجهيز الطلب بسرعة..."
                             @disabled(! $whatsappAvailable)
                         >{{ old('notes') }}</textarea>
@@ -96,7 +96,7 @@
                     <button
                         id="checkout-submit"
                         type="submit"
-                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-4 text-sm font-semibold text-white shadow-md transition-transform hover:bg-[#1DA851] hover:scale-[1.02] active:scale-95 disabled:cursor-not-allowed disabled:opacity-60"
+                        class="flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3.5 text-sm font-semibold text-white transition hover:bg-[#1DA851] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
                         @disabled(! $whatsappAvailable)
                         data-default-label="إتمام الطلب عبر واتساب"
                         data-loading-label="جاري تجهيز الطلب..."

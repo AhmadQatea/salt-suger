@@ -62,6 +62,7 @@ class MenuController extends Controller
             'selectedCategory' => $selectedCategory,
             'currency' => $settings->currency ?: 'ل.س',
             'logoUrl' => $this->logoUrl($settings),
+            'heroUrl' => $settings->heroImageUrl($this->logoUrl($settings)),
         ]);
     }
 

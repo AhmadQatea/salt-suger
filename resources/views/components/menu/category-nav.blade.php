@@ -3,14 +3,13 @@
     'selectedSlug' => '',
 ])
 
-<section id="menu-categories" class="mb-10 md:mb-12" aria-label="تصنيفات القائمة">
-    <div class="hide-scrollbar flex gap-3 overflow-x-auto pb-4">
+<section id="menu-categories" class="mb-6 md:mb-8" aria-label="تصنيفات القائمة">
+    <div class="hide-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:px-0">
         <a
             href="{{ route('menu.index') }}"
             @class([
-                'whitespace-nowrap rounded-full px-6 py-2 text-sm font-semibold transition-transform active:scale-95',
-                'bg-primary text-on-primary shadow-sm' => $selectedSlug === '',
-                'bg-surface-container text-on-surface-variant hover:bg-surface-variant' => $selectedSlug !== '',
+                'ss-chip shrink-0',
+                'ss-chip-active' => $selectedSlug === '',
             ])
         >
             الكل
@@ -20,9 +19,8 @@
             <a
                 href="{{ route('menu.index', ['category' => $category->slug]) }}"
                 @class([
-                    'whitespace-nowrap rounded-full px-6 py-2 text-sm font-semibold transition-colors',
-                    'bg-primary text-on-primary shadow-sm' => $selectedSlug === $category->slug,
-                    'bg-surface-container text-on-surface-variant hover:bg-surface-variant' => $selectedSlug !== $category->slug,
+                    'ss-chip shrink-0',
+                    'ss-chip-active' => $selectedSlug === $category->slug,
                 ])
             >
                 {{ $category->name }}

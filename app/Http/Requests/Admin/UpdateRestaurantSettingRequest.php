@@ -17,6 +17,7 @@ class UpdateRestaurantSettingRequest extends FormRequest
     {
         $this->merge([
             'whatsapp_enabled' => $this->boolean('whatsapp_enabled'),
+            'remove_hero_image' => $this->boolean('remove_hero_image'),
             'whatsapp_number' => is_string($this->whatsapp_number)
                 ? trim($this->whatsapp_number)
                 : $this->whatsapp_number,
@@ -43,6 +44,8 @@ class UpdateRestaurantSettingRequest extends FormRequest
             'currency' => ['required', 'string', 'max:20'],
             'whatsapp_enabled' => ['required', 'boolean'],
             'whatsapp_number' => ['nullable', 'string', 'max:30'],
+            'hero_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
+            'remove_hero_image' => ['sometimes', 'boolean'],
         ];
     }
 
@@ -80,11 +83,14 @@ class UpdateRestaurantSettingRequest extends FormRequest
         return [
             'restaurant_name.required' => 'اسم المطعم مطلوب.',
             'currency.required' => 'العملة مطلوبة.',
+            'hero_image.image' => 'ملف صورة الغلاف غير صالح.',
+            'hero_image.mimes' => 'صيغة صورة الغلاف يجب أن تكون jpeg أو jpg أو png أو webp.',
+            'hero_image.max' => 'حجم صورة الغلاف يجب ألا يتجاوز 5 ميغابايت.',
         ];
     }
 
     /**
-     * Normalized payload ready for persistence.
+     * Normalized payload ready for persistence (text fields only).
      *
      * @return array{
      *     restaurant_name: string,

@@ -1,33 +1,39 @@
 @props([
     'settings',
     'logoUrl',
+    'heroUrl' => null,
 ])
 
 @php
     $restaurantName = $settings->restaurant_name ?: config('app.name');
     $description = $settings->description ?: 'وجبتك المفضلة... بطلب أسهل وأسرع';
+    $image = $heroUrl ?: $logoUrl;
 @endphp
 
-<section class="group relative mb-10 overflow-hidden rounded-xl shadow-lg md:mb-12">
-    <div
-        class="h-80 w-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105 md:h-100"
-        style="background-image: linear-gradient(to top, rgba(0,0,0,.8), rgba(0,0,0,.4), transparent), url('{{ $logoUrl }}'); background-color:#1a0507;"
-        role="img"
-        aria-label="{{ $restaurantName }}"
-    ></div>
-    <div class="absolute inset-0 flex flex-col justify-end bg-linear-to-t from-black/80 via-black/40 to-transparent p-8">
-        <h1 class="mb-2 text-3xl font-bold text-white md:text-5xl">
+<section class="menu-hero relative mb-8 overflow-hidden rounded-2xl md:mb-10" aria-label="الغلاف الرئيسي">
+    <div class="menu-hero__media relative">
+        <img
+            src="{{ $image }}"
+            alt="{{ $restaurantName }}"
+            class="h-full w-full object-cover object-center"
+            width="1280"
+            height="420"
+            fetchpriority="high"
+        >
+        <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/35 to-black/10"></div>
+    </div>
+
+    <div class="absolute inset-0 flex flex-col justify-end p-5 md:p-8 lg:p-10">
+        <p class="mb-1 text-sm font-medium text-white/80">Salt&Suger</p>
+        <h1 class="mb-2 max-w-xl text-2xl font-bold leading-tight text-white md:text-4xl">
             أهلاً بك في {{ $restaurantName }}
         </h1>
-        <p class="mb-6 max-w-lg text-base text-gray-200 md:text-lg">
+        <p class="mb-5 max-w-md text-sm leading-relaxed text-white/85 md:text-base">
             {{ $description }}
         </p>
-        <a
-            href="#menu-categories"
-            class="inline-flex items-center gap-2 self-start rounded-full bg-primary px-8 py-3 text-sm font-semibold text-on-primary shadow-md transition-all hover:bg-primary-container active:scale-95"
-        >
-            <span>استعرض القائمة</span>
-            <span class="material-symbols-outlined text-sm" aria-hidden="true">arrow_forward</span>
+        <a href="#menu-categories" class="ss-btn ss-btn-primary self-start">
+            استعرض القائمة
+            <span class="material-symbols-outlined text-base" aria-hidden="true">arrow_downward</span>
         </a>
     </div>
 </section>

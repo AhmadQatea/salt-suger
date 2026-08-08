@@ -21,6 +21,7 @@ class RestaurantSettingFactory extends Factory
             'restaurant_name' => 'Salt&Suger',
             'logo' => null,
             'favicon' => null,
+            'hero_image' => null,
             'description' => 'مطعم Salt&Suger — نكهات لا تُنسى.',
             // Test placeholder — production value comes from restaurant_settings.
             'whatsapp_number' => '+963911111111',

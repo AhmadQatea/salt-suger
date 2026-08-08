@@ -6,6 +6,7 @@ use Database\Factories\RestaurantSettingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 
 class RestaurantSetting extends Model
 {
@@ -21,6 +22,7 @@ class RestaurantSetting extends Model
         'restaurant_name',
         'logo',
         'favicon',
+        'hero_image',
         'description',
         'whatsapp_number',
         'currency',
@@ -85,6 +87,19 @@ class RestaurantSetting extends Model
             'accent_color' => '#cca800',
             'whatsapp_enabled' => false,
             'whatsapp_number' => null,
+            'hero_image' => null,
         ]);
+    }
+
+    /**
+     * Public URL for the hero cover image with a safe fallback.
+     */
+    public function heroImageUrl(?string $fallback = null): string
+    {
+        if ($this->hero_image && Storage::disk('public')->exists($this->hero_image)) {
+            return asset('storage/'.$this->hero_image);
+        }
+
+        return $fallback ?: asset('images/logo.png');
     }
 }

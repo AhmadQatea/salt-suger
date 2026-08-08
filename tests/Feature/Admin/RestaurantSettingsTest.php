@@ -5,10 +5,13 @@ namespace Tests\Feature\Admin;
 use App\Models\RestaurantSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
+use Tests\Support\CreatesFakeImages;
 use Tests\TestCase;
 
 class RestaurantSettingsTest extends TestCase
 {
+    use CreatesFakeImages;
     use RefreshDatabase;
 
     protected function admin(): User
@@ -184,5 +187,75 @@ class RestaurantSettingsTest extends TestCase
             ->assertOk()
             ->assertSee('إعدادات المطعم', false)
             ->assertSee(route('admin.settings.edit'), false);
+    }
+
+    public function test_admin_can_upload_and_replace_hero_image(): void
+    {
+        Storage::fake('public');
+        $this->seedSettings();
+        $admin = $this->admin();
+
+        $this->actingAs($admin)
+            ->put(route('admin.settings.update'), [
+                'restaurant_name' => 'Salt&Suger',
+                'currency' => 'ل.س',
+                'whatsapp_enabled' => '0',
+                'hero_image' => $this->fakeImage('hero.png'),
+            ])
+            ->assertRedirect(route('admin.settings.edit'));
+
+        $settings = RestaurantSetting::query()->first();
+        $this->assertNotNull($settings?->hero_image);
+        $this->assertStringStartsWith('restaurant/hero/', $settings->hero_image);
+        $this->assertTrue(Storage::disk('public')->exists($settings->hero_image));
+
+        $oldPath = $settings->hero_image;
+
+        $this->actingAs($admin)
+            ->put(route('admin.settings.update'), [
+                'restaurant_name' => 'Salt&Suger',
+                'currency' => 'ل.س',
+                'whatsapp_enabled' => '0',
+                'hero_image' => $this->fakeImage('hero-new.jpg'),
+            ])
+            ->assertRedirect(route('admin.settings.edit'));
+
+        $settings->refresh();
+        $this->assertNotSame($oldPath, $settings->hero_image);
+        $this->assertFalse(Storage::disk('public')->exists($oldPath));
+        $this->assertTrue(Storage::disk('public')->exists($settings->hero_image));
+    }
+
+    public function test_admin_can_remove_hero_image(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('restaurant/hero/keep.png', 'fake');
+
+        $this->seedSettings([
+            'hero_image' => 'restaurant/hero/keep.png',
+        ]);
+
+        $this->actingAs($this->admin())
+            ->put(route('admin.settings.update'), [
+                'restaurant_name' => 'Salt&Suger',
+                'currency' => 'ل.س',
+                'whatsapp_enabled' => '0',
+                'remove_hero_image' => '1',
+            ])
+            ->assertRedirect(route('admin.settings.edit'));
+
+        $this->assertNull(RestaurantSetting::query()->value('hero_image'));
+        $this->assertFalse(Storage::disk('public')->exists('restaurant/hero/keep.png'));
+    }
+
+    public function test_admin_sees_hero_image_settings_section(): void
+    {
+        $this->seedSettings();
+
+        $this->actingAs($this->admin())
+            ->get(route('admin.settings.edit'))
+            ->assertOk()
+            ->assertSee('صورة الغلاف الرئيسية', false)
+            ->assertSee('إعدادات المظهر', false);
     }
 }

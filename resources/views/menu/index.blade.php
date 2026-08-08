@@ -10,8 +10,12 @@
 @section('content')
     <x-menu.header :settings="$settings" :logo-url="$logoUrl" />
 
-    <main class="container mx-auto max-w-[1280px] px-4 py-8 md:px-12">
-        <x-menu.hero :settings="$settings" :logo-url="$logoUrl" />
+    <main class="mx-auto max-w-7xl px-4 py-5 md:px-8 md:py-8">
+        <x-menu.hero
+            :settings="$settings"
+            :logo-url="$logoUrl"
+            :hero-url="$heroUrl"
+        />
 
         @if ($categories->isEmpty())
             <x-menu.empty-state message="لا توجد تصنيفات متاحة حالياً." />
@@ -30,7 +34,7 @@
             @else
                 <section
                     aria-label="قائمة الأصناف"
-                    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+                    class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4"
                 >
                     @foreach ($products as $product)
                         <x-menu.product-card

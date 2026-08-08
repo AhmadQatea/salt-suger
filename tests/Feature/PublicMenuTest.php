@@ -33,7 +33,9 @@ class PublicMenuTest extends TestCase
         $this->get(route('home'))
             ->assertOk()
             ->assertSee('Salt&Suger')
-            ->assertSee('أهلاً بك في', false);
+            ->assertSee('أهلاً بك في', false)
+            ->assertSee('product-modal', false)
+            ->assertSee('modal-add-to-order', false);
     }
 
     public function test_guest_can_access_menu_route(): void
@@ -284,5 +286,21 @@ class PublicMenuTest extends TestCase
             ->assertOk()
             ->assertSee('منتج بلا صورة', false)
             ->assertSee(asset('images/logo.png'), false);
+    }
+
+    public function test_public_menu_uses_custom_hero_image_when_present(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('restaurant/hero/cover.png', 'fake');
+
+        RestaurantSetting::factory()->create([
+            'restaurant_name' => 'Salt&Suger',
+            'hero_image' => 'restaurant/hero/cover.png',
+        ]);
+
+        $this->get(route('menu.index'))
+            ->assertOk()
+            ->assertSee('restaurant/hero/cover.png', false)
+            ->assertSee('menu-hero', false);
     }
 }
