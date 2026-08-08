@@ -29,7 +29,7 @@
         </div>
 
         <div class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
-            <div class="relative mx-4 mt-3 aspect-[16/10] shrink-0 overflow-hidden rounded-xl bg-surface-container md:mx-5 md:mt-4">
+            <div class="relative mx-4 mt-3 aspect-16/10 shrink-0 overflow-hidden rounded-xl bg-surface-container md:mx-5 md:mt-4">
                 <img
                     id="modal-product-image"
                     src="{{ $fallbackImage }}"

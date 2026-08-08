@@ -33,7 +33,7 @@
         @if ($cartCount > 0)
             <span
                 data-cart-count="{{ $cartCount }}"
-                class="absolute top-1 end-3 flex h-5 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-on-primary"
+                class="absolute top-1 inset-e-3 flex h-5 min-w-4 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold text-on-primary"
             >{{ $cartCount }}</span>
         @endif
     </a>

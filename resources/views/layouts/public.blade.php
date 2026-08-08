@@ -8,19 +8,18 @@
     @php
         $seoSettings = $settings ?? \App\Models\RestaurantSetting::cached();
         $seoHelper = \App\Support\Seo::fromSettings($seoSettings);
-        $defaultSeoImage = $seoHelper->absoluteUrl($seoHelper->shareImageUrl());
     @endphp
 
     <x-seo
-        :title="$seoTitle ?? (($seoSettings->restaurant_name ?? config('app.name')).' | المنيو')"
-        :description="$seoDescription ?? $seoHelper->homeDescription()"
-        :canonical="$seoCanonical ?? url()->current()"
-        :image="$seoImage ?? $defaultSeoImage"
+        :title="$seoTitle ?? null"
+        :description="$seoDescription ?? null"
+        :canonical="$seoCanonical ?? null"
+        :image="$seoImage ?? $seoHelper->imageUrl()"
         :robots="$seoRobots ?? 'index,follow'"
-        :type="$seoType ?? 'website'"
         :site-name="$seoSettings->restaurant_name ?? config('app.name')"
-        :json-ld="$seoJsonLd ?? []"
     />
+
+    <x-site-icons :settings="$seoSettings" />
 
     {{-- Prevent theme flash before CSS/JS load --}}
     <script>
@@ -41,10 +40,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-    <noscript>
-        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
-    </noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
@@ -59,6 +55,7 @@
     @stack('styles')
 </head>
 <body class="bg-background text-on-background font-sans antialiased pb-24 md:pb-0 min-h-screen overflow-x-hidden">
+    <x-page-loader />
     @yield('content')
 
     <div

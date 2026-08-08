@@ -7,6 +7,7 @@
 
     <title>@yield('title', config('app.name'))</title>
     <meta name="robots" content="noindex,nofollow">
+    <x-site-icons />
 
     {{-- Prevent theme flash before CSS/JS load --}}
     <script>
@@ -34,6 +35,7 @@
     @stack('styles')
 </head>
 <body class="admin-body min-h-screen overflow-x-hidden bg-background font-sans text-on-background antialiased">
+<x-page-loader />
 @php
     $isDashboard = request()->routeIs('admin.dashboard');
     $isOrders = request()->routeIs('admin.orders.*');

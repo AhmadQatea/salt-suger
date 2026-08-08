@@ -3,12 +3,13 @@
 namespace App\Support;
 
 use App\Models\Category;
-use App\Models\Product;
 use App\Models\RestaurantSetting;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+/**
+ * SEO helpers for public pages (Phases 1–2).
+ */
 class Seo
 {
     public function __construct(
@@ -25,11 +26,93 @@ class Seo
         return $this->settings->restaurant_name ?: (string) config('app.name', 'Salt&Suger');
     }
 
+    public function title(?string $override = null): string
+    {
+        $title = trim((string) ($override ?: $this->homeTitle()));
+
+        return $title !== '' ? $title : $this->restaurantName();
+    }
+
     public function description(?string $override = null): string
     {
-        $text = trim((string) ($override ?: $this->settings->description ?: config('seo.default_description')));
+        $text = trim((string) (
+            $override
+            ?: $this->settings->description
+            ?: config('seo.default_description')
+        ));
 
-        return Str::limit(strip_tags($text), 160, '…');
+        return $this->limitDescription($text);
+    }
+
+    public function homeTitle(): string
+    {
+        return $this->fill(config('seo.home_title'), [
+            'name' => $this->restaurantName(),
+        ]) ?: (string) config('seo.default_title');
+    }
+
+    public function homeDescription(): string
+    {
+        $fromSettings = trim((string) $this->settings->description);
+
+        if ($fromSettings !== '') {
+            return $this->limitDescription($fromSettings);
+        }
+
+        return $this->limitDescription($this->fill(config('seo.home_description'), [
+            'name' => $this->restaurantName(),
+        ]) ?: (string) config('seo.default_description'));
+    }
+
+    public function menuTitle(): string
+    {
+        return $this->fill(config('seo.menu_title'), [
+            'name' => $this->restaurantName(),
+        ]);
+    }
+
+    public function menuDescription(): string
+    {
+        return $this->limitDescription($this->fill(config('seo.menu_description'), [
+            'name' => $this->restaurantName(),
+        ]));
+    }
+
+    public function categoryTitle(Category $category): string
+    {
+        return $this->fill(config('seo.category_title'), [
+            'name' => $this->restaurantName(),
+            'category' => $category->name,
+        ]);
+    }
+
+    public function categoryDescription(Category $category): string
+    {
+        $custom = trim((string) $category->description);
+
+        if ($custom !== '') {
+            return $this->limitDescription($custom);
+        }
+
+        return $this->limitDescription($this->fill(config('seo.category_description'), [
+            'name' => $this->restaurantName(),
+            'category' => $category->name,
+        ]));
+    }
+
+    public function homeCanonical(): string
+    {
+        return $this->absoluteUrl(route('home'));
+    }
+
+    public function menuCanonical(): string
+    {
+        return $this->absoluteUrl(route('menu.index'));
+    }
+
+    public function categoryCanonical(Category $category): string
+    {
+        return $this->absoluteUrl(route('menu.category', $category));
     }
 
     public function logoUrl(): string
@@ -41,9 +124,30 @@ class Seo
         return asset('images/logo.png');
     }
 
-    public function shareImageUrl(): string
+    /**
+     * Preferred share/OG image for later phases (Hero → logo fallback).
+     */
+    public function imageUrl(): string
     {
         return $this->settings->heroImageUrl($this->logoUrl());
+    }
+
+    /**
+     * Public contact telephone from restaurant WhatsApp settings, when available.
+     */
+    public function telephone(): ?string
+    {
+        $number = preg_replace('/\D+/', '', (string) $this->settings->whatsapp_number);
+
+        if (! $number) {
+            return null;
+        }
+
+        if (Str::startsWith($number, '00')) {
+            $number = substr($number, 2);
+        }
+
+        return '+'.$number;
     }
 
     public function absoluteUrl(?string $url = null): string
@@ -57,183 +161,27 @@ class Seo
         return url($url);
     }
 
-    public function homeTitle(): string
+    public function settings(): RestaurantSetting
     {
-        return 'مطعم '.$this->restaurantName().' | برجر ووجبات سريعة في إدلب، سوريا';
-    }
-
-    public function menuTitle(): string
-    {
-        return 'منيو '.$this->restaurantName().' | برجر ووجبات سريعة في إدلب';
-    }
-
-    public function categoryTitle(Category $category): string
-    {
-        return $category->name.' | منيو '.$this->restaurantName().' في إدلب';
-    }
-
-    public function homeDescription(): string
-    {
-        return $this->description();
-    }
-
-    public function menuDescription(): string
-    {
-        return $this->description(
-            'تصفح منيو '.$this->restaurantName().' في إدلب: برجر، ساندويشات، وجبات، بطاطا ومشروبات بنكهات خاصة مع طلب سهل عبر واتساب.'
-        );
-    }
-
-    public function categoryDescription(Category $category): string
-    {
-        $base = trim((string) $category->description);
-
-        if ($base === '') {
-            $base = 'اكتشف تشكيلة '.$category->name.' من '.$this->restaurantName().' في إدلب.';
-        }
-
-        return $this->description($base.' اطلب من منيو '.$this->restaurantName().' في إدلب بسهولة.');
-    }
-
-    public function currencyCode(): string
-    {
-        $currency = trim((string) ($this->settings->currency ?: 'ل.س'));
-
-        return match (true) {
-            in_array($currency, ['ل.س', 'ل.س.', 'SYP', 'syp'], true) => 'SYP',
-            default => Str::upper(Str::limit(preg_replace('/\s+/', '', $currency) ?: 'SYP', 3, '')),
-        };
+        return $this->settings;
     }
 
     /**
-     * @return array<string, mixed>
+     * @param  array<string, string>  $replacements
      */
-    public function restaurantJsonLd(?string $pageUrl = null): array
+    protected function fill(?string $template, array $replacements): string
     {
-        $name = $this->restaurantName();
-        $url = $this->absoluteUrl($pageUrl ?? route('home'));
-        $logo = $this->absoluteUrl($this->logoUrl());
-        $image = $this->absoluteUrl($this->shareImageUrl());
+        $template = (string) $template;
 
-        $data = [
-            '@context' => 'https://schema.org',
-            '@type' => 'FastFoodRestaurant',
-            '@id' => $url.'#restaurant',
-            'name' => $name,
-            'image' => [$image],
-            'logo' => $logo,
-            'url' => $url,
-            'description' => $this->description($this->settings->description ?: null),
-            'servesCuisine' => config('seo.cuisine'),
-            'address' => [
-                '@type' => 'PostalAddress',
-                'addressLocality' => config('seo.city_en'),
-                'addressCountry' => config('seo.country_code'),
-            ],
-            'areaServed' => [
-                '@type' => 'City',
-                'name' => config('seo.city_en'),
-            ],
-        ];
-
-        $phone = $this->publicTelephone();
-        if ($phone) {
-            $data['telephone'] = $phone;
+        foreach ($replacements as $key => $value) {
+            $template = str_replace(':'.$key, $value, $template);
         }
 
-        return $data;
+        return trim($template);
     }
 
-    /**
-     * @param  Collection<int, Product>|iterable<int, Product>  $products
-     * @return array<string, mixed>
-     */
-    public function menuJsonLd(iterable $products, ?Category $category = null, ?string $pageUrl = null): array
+    protected function limitDescription(string $text): string
     {
-        $items = [];
-        $position = 1;
-
-        foreach ($products as $product) {
-            if (! $product instanceof Product) {
-                continue;
-            }
-
-            $items[] = [
-                '@type' => 'MenuItem',
-                'position' => $position++,
-                'name' => $product->name,
-                'description' => $this->productDescription($product),
-                'image' => $this->absoluteUrl($product->imageUrl() ?: $this->logoUrl()),
-                'offers' => [
-                    '@type' => 'Offer',
-                    'price' => number_format((float) $product->price, 2, '.', ''),
-                    'priceCurrency' => $this->currencyCode(),
-                    'availability' => 'https://schema.org/InStock',
-                ],
-            ];
-        }
-
-        return [
-            '@context' => 'https://schema.org',
-            '@type' => 'Menu',
-            'name' => $category
-                ? 'منيو '.$category->name.' — '.$this->restaurantName()
-                : 'منيو '.$this->restaurantName(),
-            'url' => $this->absoluteUrl($pageUrl ?? route('menu.index')),
-            'hasMenuSection' => [
-                '@type' => 'MenuSection',
-                'name' => $category?->name ?: 'الأصناف المتاحة',
-                'hasMenuItem' => $items,
-            ],
-        ];
-    }
-
-    /**
-     * @return list<array<string, mixed>>
-     */
-    public function breadcrumbJsonLd(array $crumbs): array
-    {
-        $items = [];
-
-        foreach (array_values($crumbs) as $index => $crumb) {
-            $items[] = [
-                '@type' => 'ListItem',
-                'position' => $index + 1,
-                'name' => $crumb['name'],
-                'item' => $this->absoluteUrl($crumb['url']),
-            ];
-        }
-
-        return [
-            '@context' => 'https://schema.org',
-            '@type' => 'BreadcrumbList',
-            'itemListElement' => $items,
-        ];
-    }
-
-    public function productDescription(Product $product): string
-    {
-        $description = trim((string) $product->description);
-
-        if ($description !== '') {
-            return Str::limit($description, 200, '…');
-        }
-
-        return $product->name.' من '.$this->restaurantName().' في إدلب.';
-    }
-
-    public function publicTelephone(): ?string
-    {
-        $number = preg_replace('/\D+/', '', (string) $this->settings->whatsapp_number);
-
-        if (! $number) {
-            return null;
-        }
-
-        if (Str::startsWith($number, '00')) {
-            $number = substr($number, 2);
-        }
-
-        return '+'.$number;
+        return Str::limit(strip_tags(trim($text)), 160, '…');
     }
 }

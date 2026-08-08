@@ -183,6 +183,52 @@ html.dark {
         @apply bg-primary text-on-primary hover:bg-primary hover:text-on-primary;
     }
 
+    .ss-page-loader {
+        @apply fixed inset-0 z-[100] flex items-center justify-center bg-background/92 backdrop-blur-[2px] transition-opacity duration-200 ease-out;
+    }
+
+    .ss-page-loader.is-hidden {
+        @apply pointer-events-none opacity-0;
+    }
+
+    .ss-page-loader__mark {
+        @apply flex h-24 w-24 items-center justify-center rounded-full;
+        animation: ss-loader-pulse 1.4s ease-in-out infinite;
+    }
+
+    .ss-page-loader__logo {
+        @apply h-20 w-20 rounded-full object-cover shadow-md;
+        animation: ss-loader-spin 2.4s linear infinite;
+    }
+
+    @keyframes ss-loader-spin {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes ss-loader-pulse {
+        0%,
+        100% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        50% {
+            transform: scale(1.04);
+            opacity: 0.92;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .ss-page-loader__mark,
+        .ss-page-loader__logo {
+            animation: none;
+        }
+    }
+
     .menu-hero {
         min-height: 11.5rem;
     }
@@ -321,7 +367,7 @@ html.dark {
     }
 
     .password-field__toggle {
-        @apply absolute inset-y-0 end-0 flex w-11 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
+        @apply absolute inset-y-0 inset-e-0 flex w-11 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
     }
 
     .password-field__toggle .material-symbols-outlined {

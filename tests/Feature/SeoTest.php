@@ -7,7 +7,6 @@ use App\Models\Product;
 use App\Models\RestaurantSetting;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class SeoTest extends TestCase
@@ -18,79 +17,134 @@ class SeoTest extends TestCase
     {
         return RestaurantSetting::factory()->create([
             'restaurant_name' => 'Salt&Suger',
-            'description' => 'Salt&Suger مطعم وجبات سريعة في إدلب يقدم برجر لذيذ بنكهات خاصة.',
+            'description' => null,
             'currency' => 'ل.س',
-            'whatsapp_number' => '963944000000',
-            'whatsapp_enabled' => true,
         ]);
     }
 
-    public function test_homepage_contains_core_seo_tags_and_restaurant_json_ld(): void
+    public function test_homepage_returns_ok_with_arabic_rtl_document(): void
+    {
+        $this->seedRestaurant();
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('lang="ar"', false)
+            ->assertSee('dir="rtl"', false);
+    }
+
+    public function test_homepage_has_expected_dynamic_title_and_description(): void
     {
         $this->seedRestaurant();
 
         $response = $this->get(route('home'))->assertOk();
-        $html = $response->getContent();
 
         $response->assertSee('<title>مطعم Salt&amp;Suger | برجر ووجبات سريعة في إدلب، سوريا</title>', false);
-        $response->assertSee('name="description"', false);
+        $response->assertSee(
+            'Salt&amp;Suger مطعم وجبات سريعة في إدلب يقدم البرجر والساندويشات والوجبات بنكهات خاصة.',
+            false
+        );
         $response->assertSee('rel="canonical"', false);
-        $response->assertSee(route('home'), false);
-        $response->assertSee('property="og:title"', false);
-        $response->assertSee('property="og:image"', false);
-        $response->assertSee('og:locale" content="ar_SY"', false);
-        $response->assertSee('twitter:card" content="summary_large_image"', false);
-        $response->assertSee('application/ld+json', false);
-        $response->assertSee('FastFoodRestaurant', false);
-        $response->assertSee('Idlib', false);
+        $response->assertSee('href="'.route('home').'"', false);
     }
 
-    public function test_menu_page_contains_seo_metadata(): void
+    public function test_homepage_canonical_is_absolute(): void
     {
         $this->seedRestaurant();
 
-        $this->get(route('menu.index'))
+        $html = $this->get(route('home'))->assertOk()->getContent();
+
+        $this->assertMatchesRegularExpression(
+            '/rel="canonical" href="https?:\/\//',
+            $html
+        );
+    }
+
+    public function test_homepage_uses_restaurant_description_when_available(): void
+    {
+        RestaurantSetting::factory()->create([
+            'restaurant_name' => 'Salt&Suger',
+            'description' => 'وصف مخصص من إعدادات المطعم',
+        ]);
+
+        $this->get(route('home'))
             ->assertOk()
-            ->assertSee('<title>منيو Salt&amp;Suger | برجر ووجبات سريعة في إدلب</title>', false)
-            ->assertSee('rel="canonical"', false)
-            ->assertSee(route('menu.index'), false)
-            ->assertSee('"@type":"Menu"', false);
+            ->assertSee('وصف مخصص من إعدادات المطعم', false);
     }
 
-    public function test_category_pages_have_appropriate_metadata(): void
+    public function test_menu_has_different_title_and_description_from_homepage(): void
     {
         $this->seedRestaurant();
 
-        $category = Category::factory()->create([
+        $home = $this->get(route('home'))->assertOk()->getContent();
+        $menu = $this->get(route('menu.index'))->assertOk()->getContent();
+
+        $this->assertStringContainsString(
+            '<title>مطعم Salt&amp;Suger | برجر ووجبات سريعة في إدلب، سوريا</title>',
+            $home
+        );
+        $this->assertStringContainsString(
+            '<title>منيو Salt&amp;Suger | برجر ووجبات سريعة في إدلب</title>',
+            $menu
+        );
+        $this->assertStringContainsString('تصفح منيو Salt&amp;Suger في إدلب', $menu);
+        $this->assertNotSame($home, $menu);
+    }
+
+    public function test_valid_category_generates_dynamic_seo_metadata(): void
+    {
+        $this->seedRestaurant();
+
+        $burgers = Category::factory()->create([
             'name' => 'برغر',
             'slug' => 'burger',
-            'description' => 'تشكيلة برجر Salt&Suger في إدلب.',
+            'description' => null,
             'is_active' => true,
         ]);
 
         Product::factory()->create([
-            'category_id' => $category->id,
+            'category_id' => $burgers->id,
             'name' => 'برغر كلاسيك',
             'is_available' => true,
         ]);
 
-        $this->get(route('menu.category', $category))
-            ->assertOk()
-            ->assertSee('<title>برغر | منيو Salt&amp;Suger في إدلب</title>', false)
-            ->assertSee(route('menu.category', $category), false)
-            ->assertSee('BreadcrumbList', false)
-            ->assertSee('برغر كلاسيك', false);
+        $response = $this->get(route('menu.category', $burgers))->assertOk();
+
+        $response->assertSee('<title>برغر | منيو Salt&amp;Suger في إدلب</title>', false);
+        $response->assertSee('اكتشف تشكيلة برغر من Salt&amp;Suger في إدلب', false);
+        $response->assertSee('href="'.route('menu.category', $burgers).'"', false);
     }
 
-    public function test_sitemap_returns_public_urls_only(): void
+    public function test_category_description_uses_category_record_when_present(): void
     {
         $this->seedRestaurant();
 
-        $active = Category::factory()->create([
-            'name' => 'برغر',
-            'slug' => 'burger',
+        $drinks = Category::factory()->create([
+            'name' => 'مشروبات',
+            'slug' => 'drinks',
+            'description' => 'مشروبات باردة وساخنة من Salt&Suger.',
             'is_active' => true,
         ]);
+
+        $this->get(route('menu.category', $drinks))
+            ->assertOk()
+            ->assertSee('<title>مشروبات | منيو Salt&amp;Suger في إدلب</title>', false)
+            ->assertSee('مشروبات باردة وساخنة من Salt&amp;Suger.', false);
+    }
+
+    public function test_invalid_category_does_not_create_misleading_seo_metadata(): void
+    {
+        $this->seedRestaurant();
+
+        $response = $this->get('/menu?category=does-not-exist')->assertOk();
+
+        $response->assertSee('<title>منيو Salt&amp;Suger | برجر ووجبات سريعة في إدلب</title>', false);
+        $response->assertSee('href="'.route('menu.index').'"', false);
+        $response->assertDontSee('does-not-exist', false);
+    }
+
+    public function test_inactive_category_is_not_an_seo_landing_page(): void
+    {
+        $this->seedRestaurant();
 
         Category::factory()->create([
             'name' => 'مخفي',
@@ -98,33 +152,54 @@ class SeoTest extends TestCase
             'is_active' => false,
         ]);
 
-        $response = $this->get(route('sitemap'))->assertOk();
-        $xml = $response->getContent();
+        $this->get('/menu/hidden')->assertNotFound();
 
-        $response->assertHeader('Content-Type', 'application/xml; charset=UTF-8');
-        $this->assertStringContainsString(route('home'), $xml);
-        $this->assertStringContainsString(route('menu.index'), $xml);
-        $this->assertStringContainsString(route('menu.category', $active), $xml);
-        $this->assertStringNotContainsString('/admin', $xml);
-        $this->assertStringNotContainsString('/cart', $xml);
-        $this->assertStringNotContainsString('/checkout', $xml);
-        $this->assertStringNotContainsString('hidden', $xml);
+        $this->get('/menu?category=hidden')
+            ->assertOk()
+            ->assertSee('<title>منيو Salt&amp;Suger | برجر ووجبات سريعة في إدلب</title>', false)
+            ->assertDontSee('<title>مخفي |', false);
     }
 
-    public function test_robots_txt_protects_private_areas(): void
+    public function test_unrelated_query_parameters_do_not_change_canonical(): void
     {
-        $response = $this->get(route('robots'))->assertOk();
-        $body = $response->getContent();
+        $this->seedRestaurant();
 
-        $response->assertHeader('Content-Type', 'text/plain; charset=UTF-8');
-        $this->assertStringContainsString('Disallow: /admin', $body);
-        $this->assertStringContainsString('Disallow: /cart', $body);
-        $this->assertStringContainsString('Disallow: /checkout', $body);
-        $this->assertStringContainsString('Allow: /menu', $body);
-        $this->assertStringContainsString('Sitemap: '.route('sitemap'), $body);
+        $category = Category::factory()->create([
+            'name' => 'مقبلات',
+            'slug' => 'appetizers',
+            'is_active' => true,
+        ]);
+
+        $menuHtml = $this->get('/menu?utm_source=instagram&utm_campaign=spring')
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('href="'.route('menu.index').'"', $menuHtml);
+        $this->assertStringNotContainsString('utm_source', $menuHtml);
+
+        $categoryHtml = $this->get('/menu/'.$category->slug.'?utm_source=instagram')
+            ->assertOk()
+            ->getContent();
+
+        $this->assertStringContainsString('href="'.route('menu.category', $category).'"', $categoryHtml);
+        $this->assertStringNotContainsString('utm_source=instagram', $categoryHtml);
     }
 
-    public function test_admin_pages_are_not_indexable(): void
+    public function test_category_query_redirects_to_clean_canonical_route(): void
+    {
+        $this->seedRestaurant();
+
+        $category = Category::factory()->create([
+            'slug' => 'burger',
+            'name' => 'برغر',
+            'is_active' => true,
+        ]);
+
+        $this->get('/menu?category=burger')
+            ->assertRedirect(route('menu.category', $category));
+    }
+
+    public function test_admin_remains_noindex(): void
     {
         $admin = User::factory()->admin()->create();
 
@@ -136,70 +211,5 @@ class SeoTest extends TestCase
             ->get(route('admin.dashboard'))
             ->assertOk()
             ->assertSee('noindex,nofollow', false);
-    }
-
-    public function test_cart_and_checkout_are_noindex(): void
-    {
-        $this->seedRestaurant();
-
-        $this->get(route('cart.index'))
-            ->assertOk()
-            ->assertSee('noindex,nofollow', false);
-
-        $category = Category::factory()->create(['is_active' => true]);
-        $product = Product::factory()->create([
-            'category_id' => $category->id,
-            'is_available' => true,
-            'price' => '1000.00',
-        ]);
-
-        $this->post(route('cart.items.store'), [
-            'product_id' => $product->id,
-            'quantity' => 1,
-        ])->assertRedirect();
-
-        $this->get(route('checkout.index'))
-            ->assertOk()
-            ->assertSee('noindex,nofollow', false);
-    }
-
-    public function test_hero_image_is_used_in_metadata_when_configured(): void
-    {
-        Storage::fake('public');
-        Storage::disk('public')->put('restaurant/hero/cover.png', 'fake-image');
-
-        RestaurantSetting::factory()->create([
-            'restaurant_name' => 'Salt&Suger',
-            'hero_image' => 'restaurant/hero/cover.png',
-        ]);
-
-        $this->get(route('home'))
-            ->assertOk()
-            ->assertSee('og:image" content="'.asset('storage/restaurant/hero/cover.png').'"', false)
-            ->assertSee('twitter:image" content="'.asset('storage/restaurant/hero/cover.png').'"', false);
-    }
-
-    public function test_json_ld_does_not_expose_private_order_data(): void
-    {
-        $this->seedRestaurant();
-
-        $html = $this->get(route('home'))->assertOk()->getContent();
-
-        $this->assertStringNotContainsString('customer_phone', $html);
-        $this->assertStringNotContainsString('order_number', $html);
-        $this->assertStringNotContainsString('admin@gmail.com', $html);
-    }
-
-    public function test_category_query_parameter_redirects_to_clean_url(): void
-    {
-        $this->seedRestaurant();
-
-        $category = Category::factory()->create([
-            'slug' => 'burger',
-            'is_active' => true,
-        ]);
-
-        $this->get('/menu?category=burger')
-            ->assertRedirect(route('menu.category', $category));
     }
 }

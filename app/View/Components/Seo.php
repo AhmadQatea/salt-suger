@@ -6,11 +6,14 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
+/**
+ * Reusable SEO head tags (Phase 1 foundation).
+ *
+ * Props for Open Graph / Twitter are accepted for later phases but are not
+ * rendered yet.
+ */
 class Seo extends Component
 {
-    /**
-     * @param  list<array<string, mixed>>|array<string, mixed>  $jsonLd
-     */
     public function __construct(
         public ?string $title = null,
         public ?string $description = null,
@@ -18,17 +21,9 @@ class Seo extends Component
         public ?string $image = null,
         public string $robots = 'index,follow',
         public string $type = 'website',
-        public string $siteName = '',
-        public string $locale = '',
-        public array $jsonLd = [],
-    ) {
-        $this->siteName = $siteName !== '' ? $siteName : (string) config('app.name', 'Salt&Suger');
-        $this->locale = $locale !== '' ? $locale : (string) config('seo.locale', 'ar_SY');
-        $this->canonical = $canonical ?: url()->current();
-        $this->image = $image ?: asset('images/logo.png');
-        $this->title = $title ?: $this->siteName;
-        $this->description = $description ?: (string) config('seo.default_description');
-    }
+        public ?string $siteName = null,
+        public ?string $locale = null,
+    ) {}
 
     public function render(): View|Closure|string
     {

@@ -52,7 +52,7 @@
                 <span class="material-symbols-outlined text-[22px]" aria-hidden="true">shopping_cart</span>
                 <span
                     id="cart-count-badge"
-                    class="absolute top-0.5 end-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold leading-none text-on-primary"
+                    class="absolute top-0.5 inset-e-0.5 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-[10px] font-bold leading-none text-on-primary"
                     data-cart-count="{{ $cartCount }}"
                 >{{ $cartCount }}</span>
             </a>

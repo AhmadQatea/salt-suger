@@ -73,32 +73,21 @@ class MenuController extends Controller
                 ->values();
         }
 
-        $isHome = $request->routeIs('home');
         $logoUrl = $this->logoUrl($settings);
-        $heroUrl = $settings->heroImageUrl($logoUrl);
-        $canonical = $selectedCategory
-            ? route('menu.category', $selectedCategory)
-            : ($isHome ? route('home') : route('menu.index'));
-
-        $title = $selectedCategory
-            ? $seo->categoryTitle($selectedCategory)
-            : ($isHome ? $seo->homeTitle() : $seo->menuTitle());
-
-        $description = $selectedCategory
-            ? $seo->categoryDescription($selectedCategory)
-            : ($isHome ? $seo->homeDescription() : $seo->menuDescription());
-
-        $jsonLd = [
-            $seo->restaurantJsonLd($canonical),
-            $seo->menuJsonLd($products, $selectedCategory, $canonical),
-        ];
+        $isHome = $request->routeIs('home');
 
         if ($selectedCategory) {
-            $jsonLd[] = $seo->breadcrumbJsonLd([
-                ['name' => 'الرئيسية', 'url' => route('home')],
-                ['name' => 'المنيو', 'url' => route('menu.index')],
-                ['name' => $selectedCategory->name, 'url' => $canonical],
-            ]);
+            $seoTitle = $seo->categoryTitle($selectedCategory);
+            $seoDescription = $seo->categoryDescription($selectedCategory);
+            $seoCanonical = $seo->categoryCanonical($selectedCategory);
+        } elseif ($isHome) {
+            $seoTitle = $seo->homeTitle();
+            $seoDescription = $seo->homeDescription();
+            $seoCanonical = $seo->homeCanonical();
+        } else {
+            $seoTitle = $seo->menuTitle();
+            $seoDescription = $seo->menuDescription();
+            $seoCanonical = $seo->menuCanonical();
         }
 
         return view('menu.index', [
@@ -109,12 +98,11 @@ class MenuController extends Controller
             'selectedCategory' => $selectedCategory,
             'currency' => $settings->currency ?: 'ل.س',
             'logoUrl' => $logoUrl,
-            'heroUrl' => $heroUrl,
-            'seoTitle' => $title,
-            'seoDescription' => $description,
-            'seoCanonical' => $canonical,
-            'seoImage' => $seo->absoluteUrl($heroUrl),
-            'seoJsonLd' => $jsonLd,
+            'heroUrl' => $settings->heroImageUrl($logoUrl),
+            'seoTitle' => $seoTitle,
+            'seoDescription' => $seoDescription,
+            'seoCanonical' => $seoCanonical,
+            'seoImage' => $seo->absoluteUrl($seo->imageUrl()),
             'seoRobots' => 'index,follow',
         ]);
     }

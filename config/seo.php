@@ -4,34 +4,28 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Local SEO defaults (Idlib, Syria)
+    | SEO defaults & page templates (Phases 1–2)
     |--------------------------------------------------------------------------
-    |
-    | Known public location only. Do not invent street addresses or coordinates.
-    |
     */
 
-    'city' => 'إدلب',
-    'city_en' => 'Idlib',
-    'country' => 'سوريا',
-    'country_en' => 'Syria',
-    'country_code' => 'SY',
     'locale' => 'ar_SY',
-    'cuisine' => [
-        'برجر',
-        'وجبات سريعة',
-        'ساندويشات',
-    ],
+    'language' => 'ar',
+    'direction' => 'rtl',
 
-    'default_description' => 'Salt&Suger مطعم وجبات سريعة في إدلب يقدم برجر لذيذ بنكهات خاصة، مع ساندويشات ووجبات متنوعة. اكتشف المنيو واطلب بسهولة عبر واتساب.',
+    'default_title' => 'مطعم Salt&Suger | برجر ووجبات سريعة في إدلب، سوريا',
 
-    /*
-    |--------------------------------------------------------------------------
-    | Optional search-engine verification tokens
-    |--------------------------------------------------------------------------
-    */
+    'default_description' => 'Salt&Suger مطعم وجبات سريعة في إدلب يقدم البرجر والساندويشات والوجبات بنكهات خاصة. اكتشف المنيو واختر وجبتك بسهولة.',
 
-    'google_site_verification' => env('SEO_GOOGLE_SITE_VERIFICATION'),
-    'bing_site_verification' => env('SEO_BING_SITE_VERIFICATION'),
+    'home_title' => 'مطعم :name | برجر ووجبات سريعة في إدلب، سوريا',
+
+    'home_description' => 'Salt&Suger مطعم وجبات سريعة في إدلب يقدم البرجر والساندويشات والوجبات بنكهات خاصة. اكتشف المنيو واختر وجبتك بسهولة.',
+
+    'menu_title' => 'منيو :name | برجر ووجبات سريعة في إدلب',
+
+    'menu_description' => 'تصفح منيو :name في إدلب واكتشف تشكيلة البرجر والوجبات والساندويشات والمقبلات والمشروبات بنكهاتنا الخاصة.',
+
+    'category_title' => ':category | منيو :name في إدلب',
+
+    'category_description' => 'اكتشف تشكيلة :category من :name في إدلب، مع نكهات خاصة تناسب محبي :category.',
 
 ];
