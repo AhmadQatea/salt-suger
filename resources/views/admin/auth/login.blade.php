@@ -50,20 +50,16 @@
                         @enderror
                     </div>
 
-                    <div>
-                        <label for="password">{{ __('كلمة المرور') }}</label>
-                        <input
-                            id="password"
-                            type="password"
-                            name="password"
-                            required
-                            autocomplete="current-password"
-                            dir="ltr"
-                        >
-                        @error('password')
-                            <p class="form-error">{{ $message }}</p>
-                        @enderror
-                    </div>
+                    <x-password-input
+                        id="password"
+                        name="password"
+                        label="{{ __('كلمة المرور') }}"
+                        autocomplete="current-password"
+                        :required="true"
+                    />
+                    @error('password')
+                        <p class="form-error">{{ $message }}</p>
+                    @enderror
 
                     <label class="admin-checkbox" for="remember">
                         <input id="remember" type="checkbox" name="remember" value="1" @checked(old('remember'))>

@@ -17,6 +17,20 @@ class ProfileTest extends TestCase
             ->assertRedirect(route('admin.login'));
     }
 
+    public function test_admin_profile_shows_password_visibility_toggles(): void
+    {
+        $admin = User::factory()->admin()->create();
+
+        $this->actingAs($admin)
+            ->get(route('admin.profile'))
+            ->assertOk()
+            ->assertSee('إعدادات الحساب', false)
+            ->assertSee('إظهار كلمة المرور', false)
+            ->assertSee('data-password-toggle', false)
+            ->assertSee('current_password', false)
+            ->assertSee('password_confirmation', false);
+    }
+
     public function test_admin_can_update_email(): void
     {
         $admin = User::factory()->admin()->create([

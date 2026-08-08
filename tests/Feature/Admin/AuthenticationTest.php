@@ -24,6 +24,8 @@ class AuthenticationTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('تسجيل الدخول إلى لوحة التحكم', false);
+        $response->assertSee('إظهار كلمة المرور', false);
+        $response->assertSee('data-password-toggle', false);
     }
 
     public function test_admin_can_authenticate_with_valid_credentials(): void

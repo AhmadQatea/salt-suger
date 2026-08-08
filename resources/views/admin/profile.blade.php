@@ -26,41 +26,32 @@
                 @enderror
             </div>
 
-            <div>
-                <label for="current_password">{{ __('كلمة المرور الحالية') }}</label>
-                <input
-                    id="current_password"
-                    type="password"
-                    name="current_password"
-                    autocomplete="current-password"
-                >
-                @error('current_password')
-                    <p class="form-error">{{ $message }}</p>
-                @enderror
-            </div>
+            <x-password-input
+                id="current_password"
+                name="current_password"
+                label="{{ __('كلمة المرور الحالية') }}"
+                autocomplete="current-password"
+            />
+            @error('current_password')
+                <p class="form-error">{{ $message }}</p>
+            @enderror
 
-            <div>
-                <label for="password">{{ __('كلمة المرور الجديدة') }}</label>
-                <input
-                    id="password"
-                    type="password"
-                    name="password"
-                    autocomplete="new-password"
-                >
-                @error('password')
-                    <p class="form-error">{{ $message }}</p>
-                @enderror
-            </div>
+            <x-password-input
+                id="password"
+                name="password"
+                label="{{ __('كلمة المرور الجديدة') }}"
+                autocomplete="new-password"
+            />
+            @error('password')
+                <p class="form-error">{{ $message }}</p>
+            @enderror
 
-            <div>
-                <label for="password_confirmation">{{ __('تأكيد كلمة المرور الجديدة') }}</label>
-                <input
-                    id="password_confirmation"
-                    type="password"
-                    name="password_confirmation"
-                    autocomplete="new-password"
-                >
-            </div>
+            <x-password-input
+                id="password_confirmation"
+                name="password_confirmation"
+                label="{{ __('تأكيد كلمة المرور الجديدة') }}"
+                autocomplete="new-password"
+            />
 
             <button type="submit" class="btn-primary">{{ __('حفظ التغييرات') }}</button>
         </form>

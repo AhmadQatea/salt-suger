@@ -312,6 +312,23 @@ html.dark {
         @apply flex items-center gap-2 font-normal text-on-surface;
     }
 
+    .password-field {
+        @apply relative;
+    }
+
+    .password-field__input {
+        @apply pe-11;
+    }
+
+    .password-field__toggle {
+        @apply absolute inset-y-0 end-0 flex w-11 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
+    }
+
+    .password-field__toggle .material-symbols-outlined {
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+
     .btn-primary,
     .btn-secondary,
     .btn-danger,
