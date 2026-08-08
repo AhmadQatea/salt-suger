@@ -1,8 +1,11 @@
 /**
  * Branded page loader.
- * Filter/category navigations set sessionStorage ss-fast-nav to skip the loader.
+ * Normal loads stay visible for at least 1 second.
+ * Category filter navigations set ss-fast-nav to skip the loader entirely.
  */
-const LOADER_MAX_MS = 3500;
+const LOADER_MIN_MS = 1000;
+const LOADER_MAX_MS = 5000;
+const startedAt = Date.now();
 
 function hidePageLoader() {
     const loader = document.getElementById('ss-page-loader');
@@ -17,6 +20,13 @@ function hidePageLoader() {
     window.setTimeout(() => {
         loader.remove();
     }, 180);
+}
+
+function scheduleHide() {
+    const elapsed = Date.now() - startedAt;
+    const remaining = Math.max(0, LOADER_MIN_MS - elapsed);
+
+    window.setTimeout(hidePageLoader, remaining);
 }
 
 document.addEventListener('click', (event) => {
@@ -36,11 +46,11 @@ document.addEventListener('click', (event) => {
 }, { capture: true, passive: true });
 
 if (window.__ssFastNav) {
-    const loader = document.getElementById('ss-page-loader');
-    loader?.remove();
-} else if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', hidePageLoader, { once: true });
+    document.getElementById('ss-page-loader')?.remove();
+} else if (document.readyState === 'complete') {
+    scheduleHide();
     window.setTimeout(hidePageLoader, LOADER_MAX_MS);
 } else {
-    hidePageLoader();
+    window.addEventListener('load', scheduleHide, { once: true });
+    window.setTimeout(hidePageLoader, LOADER_MAX_MS);
 }
