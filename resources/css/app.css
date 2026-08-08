@@ -5,7 +5,497 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/*
+|--------------------------------------------------------------------------
+| Salt&Suger Stitch MD3 tokens (light + dark)
+|--------------------------------------------------------------------------
+| Dark mode switches the same semantic token names via `.dark` on <html>.
+| Do not invent a third palette — values come from the Stitch exports.
+*/
+:root {
+    --ss-primary: #ba0013;
+    --ss-primary-container: #e31e24;
+    --ss-on-primary: #ffffff;
+    --ss-on-primary-container: #fffafa;
+    --ss-background: #f8f9fa;
+    --ss-on-background: #191c1d;
+    --ss-surface: #f8f9fa;
+    --ss-on-surface: #191c1d;
+    --ss-on-surface-variant: #5d3f3c;
+    --ss-surface-container: #edeeef;
+    --ss-surface-container-low: #f3f4f5;
+    --ss-surface-container-high: #e7e8e9;
+    --ss-surface-container-highest: #e1e3e4;
+    --ss-surface-container-lowest: #ffffff;
+    --ss-surface-variant: #e1e3e4;
+    --ss-outline: #926f6b;
+    --ss-outline-variant: #e7bdb8;
+    --ss-secondary: #5f5e5e;
+    --ss-secondary-container: #e2dfde;
+    --ss-on-secondary-container: #636262;
+    --ss-tertiary: #725c00;
+    --ss-tertiary-container: #cca800;
+    --ss-on-tertiary-container: #4d3e00;
+    --ss-tertiary-fixed: #ffe07c;
+    --ss-on-tertiary-fixed: #231b00;
+    --ss-error: #ba1a1a;
+    --ss-on-error: #ffffff;
+    --ss-error-container: #ffdad6;
+    --ss-inverse-surface: #2e3132;
+    --ss-inverse-on-surface: #f0f1f2;
+    --ss-inverse-primary: #ffb4ab;
+    --ss-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --ss-card-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.15);
+    --ss-bottom-nav-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+}
+
+html.dark {
+    --ss-primary: #ffb4ab;
+    --ss-primary-container: #e31e24;
+    --ss-on-primary: #690006;
+    --ss-on-primary-container: #fffafa;
+    --ss-background: #121212;
+    --ss-on-background: #e5e2e1;
+    --ss-surface: #121212;
+    --ss-on-surface: #e5e2e1;
+    --ss-on-surface-variant: #cfc0bd;
+    --ss-surface-container: #201f1f;
+    --ss-surface-container-low: #1c1b1b;
+    --ss-surface-container-high: #2a2a2a;
+    --ss-surface-container-highest: #353534;
+    --ss-surface-container-lowest: #1e1e1e;
+    --ss-surface-variant: #353534;
+    --ss-outline: #ae8883;
+    --ss-outline-variant: #5d3f3c;
+    --ss-secondary: #c6c6c7;
+    --ss-secondary-container: #454747;
+    --ss-on-secondary-container: #b4b5b5;
+    --ss-tertiary: #c6c6cf;
+    --ss-tertiary-container: #73737c;
+    --ss-on-tertiary-container: #fdfaff;
+    --ss-tertiary-fixed: #e2e1eb;
+    --ss-on-tertiary-fixed: #1a1b22;
+    --ss-error: #ffb4ab;
+    --ss-on-error: #690005;
+    --ss-error-container: #93000a;
+    --ss-inverse-surface: #e5e2e1;
+    --ss-inverse-on-surface: #313030;
+    --ss-inverse-primary: #c00014;
+    --ss-card-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --ss-card-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.6);
+    --ss-bottom-nav-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+}
+
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+    --font-cairo: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+
+    --color-primary: var(--ss-primary);
+    --color-primary-container: var(--ss-primary-container);
+    --color-on-primary: var(--ss-on-primary);
+    --color-on-primary-container: var(--ss-on-primary-container);
+    --color-background: var(--ss-background);
+    --color-on-background: var(--ss-on-background);
+    --color-surface: var(--ss-surface);
+    --color-on-surface: var(--ss-on-surface);
+    --color-on-surface-variant: var(--ss-on-surface-variant);
+    --color-surface-container: var(--ss-surface-container);
+    --color-surface-container-low: var(--ss-surface-container-low);
+    --color-surface-container-high: var(--ss-surface-container-high);
+    --color-surface-container-highest: var(--ss-surface-container-highest);
+    --color-surface-container-lowest: var(--ss-surface-container-lowest);
+    --color-surface-variant: var(--ss-surface-variant);
+    --color-outline: var(--ss-outline);
+    --color-outline-variant: var(--ss-outline-variant);
+    --color-secondary: var(--ss-secondary);
+    --color-secondary-container: var(--ss-secondary-container);
+    --color-on-secondary-container: var(--ss-on-secondary-container);
+    --color-tertiary: var(--ss-tertiary);
+    --color-tertiary-container: var(--ss-tertiary-container);
+    --color-on-tertiary-container: var(--ss-on-tertiary-container);
+    --color-tertiary-fixed: var(--ss-tertiary-fixed);
+    --color-on-tertiary-fixed: var(--ss-on-tertiary-fixed);
+    --color-error: var(--ss-error);
+    --color-on-error: var(--ss-on-error);
+    --color-error-container: var(--ss-error-container);
+    --color-inverse-surface: var(--ss-inverse-surface);
+    --color-inverse-on-surface: var(--ss-inverse-on-surface);
+    --color-inverse-primary: var(--ss-inverse-primary);
+
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+
+    --spacing-margin-mobile: 16px;
+    --spacing-margin-desktop: 48px;
+    --spacing-container-max: 1280px;
+}
+
+@layer base {
+    html {
+        color-scheme: light;
+    }
+
+    html.dark {
+        color-scheme: dark;
+    }
+
+    body {
+        font-family: 'Cairo', ui-sans-serif, system-ui, sans-serif;
+        background-color: var(--ss-background);
+        color: var(--ss-on-background);
+    }
+
+    .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+}
+
+@layer utilities {
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .card-shadow,
+    .menu-card-shadow {
+        box-shadow: var(--ss-card-shadow);
+    }
+
+    .card-hover:hover,
+    .menu-card-hover:hover {
+        transform: translateY(-2px) scale(1.02);
+        box-shadow: var(--ss-card-shadow-hover);
+    }
+
+    .pb-safe {
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    }
+
+    .bg-brand-primary {
+        background-color: var(--ss-primary);
+    }
+
+    .text-brand-primary {
+        color: var(--ss-primary);
+    }
+
+    .bg-brand-accent {
+        background-color: var(--ss-tertiary-container);
+    }
+
+    .login-bg-pattern {
+        background-color: var(--ss-background);
+        background-image: radial-gradient(var(--ss-outline-variant) 1px, transparent 1px);
+        background-size: 24px 24px;
+    }
+}
+
+/* -------------------------------------------------------------------------
+ | Admin shared utilities (MD3 tokens — light/dark via CSS variables)
+ |-------------------------------------------------------------------------- */
+@layer components {
+    .admin-card {
+        @apply rounded-xl border border-outline-variant bg-surface-container-lowest p-6 dark:bg-surface-container;
+        box-shadow: var(--ss-card-shadow);
+    }
+
+    .admin-card h1 {
+        @apply mb-1 text-2xl font-bold text-on-surface;
+    }
+
+    .admin-card .subtitle {
+        @apply mb-5 text-on-surface-variant;
+    }
+
+    .page-toolbar {
+        @apply mb-5 flex flex-wrap items-start justify-between gap-4;
+    }
+
+    .filters {
+        @apply mb-5 flex flex-wrap gap-3;
+    }
+
+    .filters input,
+    .filters select,
+    .admin-form input[type='email'],
+    .admin-form input[type='password'],
+    .admin-form input[type='text'],
+    .admin-form input[type='tel'],
+    .admin-form input[type='number'],
+    .admin-form input[type='date'],
+    .admin-form input[type='file'],
+    .admin-form textarea,
+    .admin-form select {
+        @apply w-full rounded-lg border border-outline-variant bg-surface-container-lowest px-3 py-2.5 text-on-surface transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/25 dark:bg-surface-container-high;
+    }
+
+    .filters input,
+    .filters select {
+        width: auto;
+        min-width: 160px;
+    }
+
+    .admin-form {
+        @apply grid max-w-xl gap-4;
+    }
+
+    .admin-form label {
+        @apply mb-1.5 block font-semibold text-on-surface;
+    }
+
+    .admin-form textarea {
+        min-height: 110px;
+        resize: vertical;
+    }
+
+    .admin-checkbox {
+        @apply flex items-center gap-2 font-normal text-on-surface;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-danger,
+    .btn-ghost {
+        @apply inline-flex cursor-pointer items-center justify-center rounded-lg border-0 px-4 py-2.5 font-bold no-underline transition-colors;
+    }
+
+    .btn-primary {
+        @apply bg-primary text-on-primary hover:bg-primary-container hover:text-on-primary-container;
+    }
+
+    .btn-secondary {
+        @apply bg-secondary-container text-on-secondary-container hover:bg-surface-container-high;
+    }
+
+    .btn-danger {
+        @apply bg-error text-on-error hover:opacity-90;
+    }
+
+    .btn-ghost {
+        @apply border border-outline-variant bg-transparent font-semibold text-on-surface hover:bg-surface-container-high;
+    }
+
+    .btn-sm {
+        @apply px-2.5 py-1.5 text-sm font-semibold;
+    }
+
+    .form-error {
+        @apply mt-1.5 text-sm text-error;
+    }
+
+    .form-errors,
+    .alert-error {
+        @apply mb-4 rounded-lg border border-error/30 bg-error-container px-4 py-3 text-error;
+    }
+
+    .form-errors ul {
+        @apply m-0 ps-4;
+    }
+
+    .alert-success {
+        @apply mb-4 rounded-lg border border-tertiary-container/60 bg-tertiary-fixed px-4 py-3 text-on-tertiary-fixed;
+    }
+
+    .admin-table-wrap {
+        @apply overflow-x-auto;
+    }
+
+    .admin-table {
+        @apply w-full min-w-180 border-collapse text-right;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        @apply border-b border-outline-variant/60 px-2.5 py-3.5 align-middle;
+    }
+
+    .admin-table th {
+        @apply text-sm font-bold text-on-surface-variant;
+    }
+
+    .thumb {
+        @apply inline-block h-13 w-13 rounded-lg bg-surface-container-high object-cover;
+    }
+
+    .thumb-placeholder {
+        @apply inline-grid h-13 w-13 place-items-center rounded-lg bg-surface-container-high text-xs text-on-surface-variant;
+    }
+
+    .badge-status {
+        @apply inline-block rounded-full px-2.5 py-0.5 text-sm font-bold;
+    }
+
+    .badge-status.is-on {
+        @apply bg-tertiary-fixed text-on-tertiary-fixed;
+    }
+
+    .badge-status.is-off {
+        @apply bg-surface-container-high text-on-surface-variant;
+    }
+
+    .badge-order {
+        @apply inline-block whitespace-nowrap rounded-full px-2.5 py-1 text-sm font-bold;
+    }
+
+    .badge-order.is-pending {
+        @apply bg-tertiary-fixed text-on-tertiary-fixed;
+    }
+
+    .badge-order.is-confirmed {
+        @apply bg-primary/10 text-primary;
+    }
+
+    .badge-order.is-preparing {
+        @apply bg-secondary-container text-on-secondary-container;
+    }
+
+    .badge-order.is-ready {
+        @apply bg-tertiary-container/30 text-on-tertiary-container;
+    }
+
+    .badge-order.is-completed {
+        @apply bg-tertiary-container/40 text-on-tertiary-container;
+    }
+
+    .badge-order.is-cancelled {
+        @apply bg-surface-container-high text-on-surface-variant;
+    }
+
+    .order-cards {
+        @apply hidden gap-3.5;
+    }
+
+    .order-card {
+        @apply rounded-xl border border-outline-variant bg-surface-container-lowest p-4 dark:bg-surface-container;
+    }
+
+    .order-card-top {
+        @apply mb-2.5 flex items-start justify-between gap-3;
+    }
+
+    .order-card-meta {
+        @apply mb-3.5 grid gap-1.5 text-sm text-on-surface-variant;
+    }
+
+    .order-card-meta strong {
+        @apply font-bold text-on-surface;
+    }
+
+    .nav-count {
+        @apply ms-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-tertiary-container px-1.5 text-xs font-bold text-on-tertiary-container;
+    }
+
+    .detail-grid {
+        @apply grid gap-4;
+    }
+
+    @media (min-width: 840px) {
+        .detail-grid {
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: start;
+        }
+    }
+
+    .detail-block {
+        @apply rounded-xl border border-outline-variant bg-surface-container-lowest px-4 py-4 dark:bg-surface-container;
+    }
+
+    .detail-block h2 {
+        @apply mb-3.5 text-lg font-bold text-on-surface;
+    }
+
+    .detail-row {
+        @apply flex justify-between gap-4 border-b border-outline-variant/50 py-2 text-[0.95rem];
+    }
+
+    .detail-row:last-child {
+        border-bottom: 0;
+    }
+
+    .detail-row span {
+        @apply text-on-surface-variant;
+    }
+
+    .detail-row strong {
+        text-align: left;
+        direction: ltr;
+    }
+
+    .detail-row strong.rtl {
+        direction: rtl;
+        text-align: right;
+    }
+
+    .badge-label {
+        @apply inline-block rounded-md bg-primary/10 px-1.5 py-0.5 text-sm text-primary;
+    }
+
+    .actions {
+        @apply flex flex-wrap gap-1.5;
+    }
+
+    .image-preview {
+        @apply mt-3 hidden max-w-45 rounded-lg border border-outline-variant;
+    }
+
+    .image-preview.is-visible {
+        display: block;
+    }
+
+    .pagination-wrap {
+        @apply mt-5;
+    }
+
+    .admin-meta {
+        @apply mt-5 border-t border-outline-variant pt-5 text-on-surface-variant;
+    }
+
+    .empty-state {
+        @apply px-4 py-8 text-center text-on-surface-variant;
+    }
+
+    .admin-nav-link {
+        @apply mx-2 flex items-center gap-3 rounded-lg px-4 py-3 font-medium text-on-surface/80 transition-all hover:bg-surface-variant hover:text-on-surface;
+    }
+
+    .admin-nav-link.is-active {
+        @apply translate-x-1 bg-primary-container font-semibold text-on-primary-container;
+    }
+
+    .admin-mobile-nav-link {
+        @apply relative flex flex-col items-center justify-center rounded-xl px-3 py-1 text-on-surface/80 transition-colors;
+    }
+
+    .admin-mobile-nav-link.is-active {
+        @apply scale-90 bg-primary-container font-semibold text-on-primary-container;
+    }
+
+    .admin-sidebar-label {
+        @apply text-sm text-on-surface/70;
+    }
+
+    .print-only {
+        display: none;
+    }
+
+    @media (max-width: 720px) {
+        .filters input,
+        .filters select {
+            min-width: 100%;
+            width: 100%;
+        }
+
+        .orders-table-wrap {
+            display: none;
+        }
+
+        .order-cards {
+            display: grid;
+        }
+    }
 }
