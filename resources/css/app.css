@@ -307,7 +307,29 @@ html.dark {
     .menu-product-card {
         box-shadow: var(--ss-card-shadow);
         content-visibility: auto;
-        contain-intrinsic-size: auto 220px;
+        contain-intrinsic-size: auto 170px;
+    }
+
+    .menu-product-card__media {
+        aspect-ratio: 4 / 3;
+        max-height: 6.5rem;
+    }
+
+    @media (min-width: 375px) {
+        .menu-product-card__media {
+            max-height: 7rem;
+        }
+    }
+
+    @media (min-width: 640px) {
+        .menu-product-card__media {
+            aspect-ratio: 1 / 1;
+            max-height: none;
+        }
+
+        .menu-product-card {
+            contain-intrinsic-size: auto 280px;
+        }
     }
 
     @media (min-width: 768px) {

@@ -23,9 +23,9 @@
     data-product-image="{{ $imageUrl }}"
     data-product-fallback="{{ $fallbackImage }}"
     data-product-currency="{{ $currency }}"
-    class="menu-product-card group flex flex-col overflow-hidden rounded-xl bg-surface-container-lowest ring-1 ring-outline-variant/25 transition duration-200 hover:ring-primary/30 dark:bg-surface-container md:rounded-2xl"
+    class="menu-product-card group flex flex-col overflow-hidden rounded-lg bg-surface-container-lowest ring-1 ring-outline-variant/25 transition duration-200 hover:ring-primary/30 dark:bg-surface-container md:rounded-2xl"
 >
-    <div class="relative aspect-square w-full overflow-hidden bg-surface-container">
+    <div class="menu-product-card__media relative w-full overflow-hidden bg-surface-container">
         <button
             type="button"
             data-open-product
@@ -44,15 +44,15 @@
         </button>
 
         @if ($product->badge)
-            <span class="absolute top-1.5 right-1.5 max-w-[85%] truncate rounded-md bg-tertiary-container px-1.5 py-0.5 text-[10px] font-semibold text-on-tertiary-container md:top-3 md:right-3 md:px-2 md:py-1 md:text-[11px]">
+            <span class="absolute top-1 right-1 max-w-[85%] truncate rounded md:rounded-md bg-tertiary-container px-1 py-0.5 text-[9px] font-semibold text-on-tertiary-container md:top-3 md:right-3 md:px-2 md:py-1 md:text-[11px]">
                 {{ $product->badge }}
             </span>
         @endif
     </div>
 
-    <div class="flex grow flex-col gap-1.5 p-2.5 sm:gap-2 sm:p-3 md:gap-3 md:p-4">
+    <div class="flex grow flex-col gap-1 p-1.5 sm:gap-2 sm:p-3 md:gap-3 md:p-4">
         <div class="min-h-0">
-            <h3 class="text-[13px] font-semibold leading-snug text-on-surface line-clamp-2 sm:text-sm md:text-base">
+            <h3 class="text-[11px] font-semibold leading-snug text-on-surface line-clamp-2 sm:text-sm md:text-base">
                 {{ $product->name }}
             </h3>
             @if ($product->description)
@@ -62,17 +62,17 @@
             @endif
         </div>
 
-        <div class="mt-auto flex items-center justify-between gap-1.5 pt-0.5">
-            <span class="min-w-0 truncate text-[13px] font-bold text-primary tabular-nums sm:text-sm md:text-base">
+        <div class="mt-auto flex items-center justify-between gap-1 pt-0.5">
+            <span class="min-w-0 truncate text-[11px] font-bold text-primary tabular-nums sm:text-sm md:text-base">
                 {{ $formattedPrice }}
             </span>
             <button
                 type="button"
                 data-open-product
-                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary transition hover:bg-primary-container active:scale-95 md:h-11 md:w-11"
+                class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary transition hover:bg-primary-container active:scale-95 sm:h-9 sm:w-9 md:h-11 md:w-11"
                 aria-label="أضف إلى الطلب: {{ $product->name }}"
             >
-                <span class="material-symbols-outlined text-[20px] md:text-[22px]" aria-hidden="true">add</span>
+                <span class="material-symbols-outlined text-[16px] sm:text-[20px] md:text-[22px]" aria-hidden="true">add</span>
             </button>
         </div>
     </div>

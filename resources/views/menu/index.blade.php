@@ -52,7 +52,7 @@
             @else
                 <section
                     aria-label="قائمة الأصناف"
-                    class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4"
+                    class="grid grid-cols-2 gap-1.5 sm:gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4"
                 >
                     @foreach ($products as $product)
                         <x-menu.product-card
