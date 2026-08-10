@@ -3,8 +3,12 @@
     'selectedSlug' => '',
 ])
 
-<section id="menu-categories" class="mb-6 md:mb-8" aria-label="تصنيفات القائمة">
-    <div class="hide-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 md:mx-0 md:px-0">
+<section
+    id="menu-categories"
+    class="sticky top-12 z-30 -mx-3 mb-3 border-b border-outline-variant/30 bg-background/95 px-3 py-2 backdrop-blur-md sm:top-14 sm:-mx-4 sm:mb-4 sm:px-4 md:static md:mx-0 md:mb-8 md:border-0 md:bg-transparent md:px-0 md:py-0 md:backdrop-blur-none"
+    aria-label="تصنيفات القائمة"
+>
+    <div class="hide-scrollbar flex gap-2 overflow-x-auto whitespace-nowrap pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <a
             href="{{ route('menu.index') }}"
             data-fast-nav

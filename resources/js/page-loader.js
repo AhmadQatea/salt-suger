@@ -1,10 +1,10 @@
 /**
  * Branded page loader.
- * Normal loads stay visible for at least 1 second.
+ * Normal loads stay visible for at least 0.2s (then wait for load on slow networks).
  * Category filter navigations set ss-fast-nav to skip the loader entirely.
  */
-const LOADER_MIN_MS = 1000;
-const LOADER_MAX_MS = 5000;
+const LOADER_MIN_MS = 200;
+const LOADER_MAX_MS = 8000;
 const startedAt = Date.now();
 
 function hidePageLoader() {

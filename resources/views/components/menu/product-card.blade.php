@@ -23,7 +23,7 @@
     data-product-image="{{ $imageUrl }}"
     data-product-fallback="{{ $fallbackImage }}"
     data-product-currency="{{ $currency }}"
-    class="menu-product-card group flex flex-col overflow-hidden rounded-2xl bg-surface-container-lowest ring-1 ring-outline-variant/25 transition duration-200 hover:ring-primary/30 dark:bg-surface-container"
+    class="menu-product-card group flex flex-col overflow-hidden rounded-xl bg-surface-container-lowest ring-1 ring-outline-variant/25 transition duration-200 hover:ring-primary/30 dark:bg-surface-container md:rounded-2xl"
 >
     <div class="relative aspect-square w-full overflow-hidden bg-surface-container">
         <button
@@ -44,31 +44,35 @@
         </button>
 
         @if ($product->badge)
-            <span class="absolute top-3 right-3 rounded-md bg-tertiary-container px-2 py-1 text-[11px] font-semibold text-on-tertiary-container">
+            <span class="absolute top-1.5 right-1.5 max-w-[85%] truncate rounded-md bg-tertiary-container px-1.5 py-0.5 text-[10px] font-semibold text-on-tertiary-container md:top-3 md:right-3 md:px-2 md:py-1 md:text-[11px]">
                 {{ $product->badge }}
             </span>
         @endif
     </div>
 
-    <div class="flex grow flex-col gap-3 p-4">
-        <div class="min-h-16">
-            <h3 class="text-base font-semibold leading-snug text-on-surface line-clamp-1">{{ $product->name }}</h3>
+    <div class="flex grow flex-col gap-1.5 p-2.5 sm:gap-2 sm:p-3 md:gap-3 md:p-4">
+        <div class="min-h-0">
+            <h3 class="text-[13px] font-semibold leading-snug text-on-surface line-clamp-2 sm:text-sm md:text-base">
+                {{ $product->name }}
+            </h3>
             @if ($product->description)
-                <p class="mt-1 text-sm leading-relaxed text-on-surface-variant line-clamp-2">
+                <p class="mt-0.5 hidden text-xs leading-relaxed text-on-surface-variant line-clamp-2 sm:block md:text-sm">
                     {{ $product->description }}
                 </p>
             @endif
         </div>
 
-        <div class="mt-auto flex items-center justify-between gap-3">
-            <span class="text-base font-bold text-primary">{{ $formattedPrice }}</span>
+        <div class="mt-auto flex items-center justify-between gap-1.5 pt-0.5">
+            <span class="min-w-0 truncate text-[13px] font-bold text-primary tabular-nums sm:text-sm md:text-base">
+                {{ $formattedPrice }}
+            </span>
             <button
                 type="button"
                 data-open-product
-                class="flex h-11 w-11 items-center justify-center rounded-full bg-primary text-on-primary transition hover:bg-primary-container active:scale-95"
+                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-on-primary transition hover:bg-primary-container active:scale-95 md:h-11 md:w-11"
                 aria-label="أضف إلى الطلب: {{ $product->name }}"
             >
-                <span class="material-symbols-outlined text-[22px]" aria-hidden="true">add</span>
+                <span class="material-symbols-outlined text-[20px] md:text-[22px]" aria-hidden="true">add</span>
             </button>
         </div>
     </div>

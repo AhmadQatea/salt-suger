@@ -9,16 +9,16 @@
 @endphp
 
 <header class="sticky top-0 z-40 border-b border-outline-variant/40 bg-surface/95 backdrop-blur-md">
-    <div class="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 md:h-16 md:px-8">
-        <a href="{{ route('menu.index') }}" class="flex min-w-0 items-center gap-2.5">
+    <div class="mx-auto flex h-12 max-w-7xl items-center justify-between gap-2 px-3 sm:h-14 sm:gap-3 sm:px-4 md:h-16 md:px-8">
+        <a href="{{ route('menu.index') }}" class="flex min-w-0 items-center gap-2 sm:gap-2.5">
             <img
                 src="{{ $logoUrl }}"
                 alt="شعار {{ $restaurantName }}"
-                class="h-9 w-9 shrink-0 rounded-full object-cover ring-1 ring-outline-variant/50 md:h-10 md:w-10"
+                class="h-8 w-8 shrink-0 rounded-full object-cover ring-1 ring-outline-variant/50 sm:h-9 sm:w-9 md:h-10 md:w-10"
                 width="40"
                 height="40"
             >
-            <span class="truncate text-base font-bold text-primary md:text-lg">
+            <span class="truncate text-sm font-bold text-primary sm:text-base md:text-lg">
                 {{ $restaurantName }}
             </span>
         </a>

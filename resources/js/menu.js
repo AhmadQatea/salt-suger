@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addButton = document.getElementById('modal-add-to-order');
     const decreaseBtn = document.getElementById('modal-qty-decrease');
     const increaseBtn = document.getElementById('modal-qty-increase');
+    const floatingWrap = document.querySelector('[data-floating-cart-wrap]');
+    const floatingCart = document.querySelector('[data-floating-cart]');
 
     let quantity = 1;
     let unitPrice = '0.00';
@@ -46,11 +48,49 @@ document.addEventListener('DOMContentLoaded', () => {
         window.setTimeout(() => feedback.classList.add('hidden'), 2200);
     };
 
-    const updateCartBadge = (count) => {
+    const bumpFloatingCart = () => {
+        if (!floatingCart || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
+
+        floatingCart.classList.remove('is-bump');
+        // Force reflow so the animation can replay.
+        void floatingCart.offsetWidth;
+        floatingCart.classList.add('is-bump');
+    };
+
+    const updateFloatingCart = (count, subtotalFormatted) => {
+        if (!floatingWrap) {
+            return;
+        }
+
+        const label = floatingWrap.querySelector('[data-cart-count-label]');
+        if (label) {
+            label.textContent = Number(count) === 1 ? 'منتج' : 'منتجات';
+        }
+
+        const subtotalEl = floatingWrap.querySelector('[data-cart-subtotal]');
+        if (subtotalEl && typeof subtotalFormatted === 'string' && subtotalFormatted.length > 0) {
+            subtotalEl.textContent = subtotalFormatted;
+        }
+
+        if (Number(count) > 0) {
+            floatingWrap.classList.remove('hidden');
+            floatingWrap.removeAttribute('hidden');
+            bumpFloatingCart();
+        } else {
+            floatingWrap.classList.add('hidden');
+            floatingWrap.setAttribute('hidden', '');
+        }
+    };
+
+    const updateCartBadge = (count, subtotalFormatted) => {
         document.querySelectorAll('#cart-count-badge, [data-cart-count]').forEach((badge) => {
             badge.textContent = String(count);
             badge.setAttribute('data-cart-count', String(count));
         });
+
+        updateFloatingCart(count, subtotalFormatted);
     };
 
     const updateTotal = () => {
@@ -191,10 +231,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (typeof payload.cart_count !== 'undefined') {
-                updateCartBadge(payload.cart_count);
+                updateCartBadge(payload.cart_count, payload.cart_subtotal_formatted);
             }
 
-            showToast(payload.message || `تمت إضافة «${currentProduct.name}» إلى الطلب.`);
+            showToast(payload.message || 'تمت إضافة المنتج إلى السلة');
             closeModal();
         } catch (error) {
             showToast('تعذر إضافة الصنف إلى الطلب.');

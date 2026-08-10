@@ -13,7 +13,7 @@
 @section('content')
     <x-menu.header :settings="$settings" :logo-url="$logoUrl" />
 
-    <main class="mx-auto max-w-7xl px-4 py-5 md:px-8 md:py-8">
+    <main class="mx-auto max-w-7xl px-3 py-3 sm:px-4 sm:py-5 md:px-8 md:py-8">
         <x-menu.hero
             :settings="$settings"
             :logo-url="$logoUrl"
@@ -29,16 +29,16 @@
                 :selected-slug="$selectedSlug"
             />
 
-            <h2 class="mb-4 text-lg font-bold text-on-surface md:text-xl">
+            <h2 class="mb-3 text-base font-bold text-on-surface sm:mb-4 sm:text-lg md:text-xl">
                 {{ $selectedCategory ? $selectedCategory->name : 'المنيو' }}
             </h2>
 
             @if ($selectedCategory && $selectedCategory->description)
-                <p class="mb-5 max-w-3xl text-sm leading-relaxed text-on-surface-variant md:text-base">
+                <p class="mb-3 max-w-3xl text-xs leading-relaxed text-on-surface-variant sm:mb-5 sm:text-sm md:text-base">
                     {{ $selectedCategory->description }}
                 </p>
             @elseif (! $selectedCategory)
-                <p class="mb-5 max-w-3xl text-sm leading-relaxed text-on-surface-variant md:text-base">
+                <p class="mb-3 max-w-3xl text-xs leading-relaxed text-on-surface-variant sm:mb-5 sm:text-sm md:text-base">
                     برجر ووجبات سريعة بنكهات حلوة ومالحة — اختر من منيو {{ $restaurantName }} واطلب بسهولة.
                 </p>
             @endif
@@ -52,7 +52,7 @@
             @else
                 <section
                     aria-label="قائمة الأصناف"
-                    class="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 xl:grid-cols-4"
+                    class="grid grid-cols-2 gap-2 sm:gap-3 md:grid-cols-2 md:gap-5 lg:grid-cols-3 xl:grid-cols-4"
                 >
                     @foreach ($products as $product)
                         <x-menu.product-card

@@ -6,6 +6,7 @@ use App\Http\Requests\Cart\StoreCartItemRequest;
 use App\Http\Requests\Cart\UpdateCartItemRequest;
 use App\Models\RestaurantSetting;
 use App\Services\CartService;
+use App\Support\Money;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -41,9 +42,15 @@ class CartController extends Controller
         );
 
         if ($request->wantsJson()) {
+            $settings = $this->settings();
+            $currency = $settings->currency ?: 'ل.س';
+            $subtotal = $this->cart->subtotal();
+
             return response()->json([
-                'message' => 'تمت إضافة الصنف إلى الطلب.',
+                'message' => 'تمت إضافة المنتج إلى السلة',
                 'cart_count' => $this->cart->totalQuantity(),
+                'cart_subtotal' => $subtotal,
+                'cart_subtotal_formatted' => Money::format($subtotal, $currency),
             ]);
         }
 

@@ -178,7 +178,7 @@ html.dark {
     }
 
     .ss-chip {
-        @apply rounded-full bg-surface-container px-4 py-2.5 text-sm font-medium text-on-surface-variant transition;
+        @apply whitespace-nowrap rounded-full bg-surface-container px-3 py-2 text-xs font-medium text-on-surface-variant transition sm:px-4 sm:py-2.5 sm:text-sm;
     }
 
     .ss-chip:hover {
@@ -187,6 +187,44 @@ html.dark {
 
     .ss-chip-active {
         @apply bg-primary text-on-primary hover:bg-primary hover:text-on-primary;
+    }
+
+    .floating-cart {
+        animation: ss-floating-cart-in 0.28s ease-out;
+    }
+
+    .floating-cart.is-bump {
+        animation: ss-floating-cart-bump 0.28s ease-out;
+    }
+
+    @keyframes ss-floating-cart-in {
+        from {
+            opacity: 0;
+            transform: translateY(0.75rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes ss-floating-cart-bump {
+        0% {
+            transform: scale(1);
+        }
+        45% {
+            transform: scale(1.03);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .floating-cart,
+        .floating-cart.is-bump {
+            animation: none;
+        }
     }
 
     .ss-page-loader {
@@ -243,14 +281,24 @@ html.dark {
     }
 
     .menu-hero {
-        min-height: 11.5rem;
+        min-height: 8.75rem;
     }
 
     .menu-hero__media {
-        height: clamp(11.5rem, 38vw, 16rem);
+        height: clamp(8.75rem, 34vw, 12.5rem);
+    }
+
+    @media (min-width: 640px) {
+        .menu-hero__media {
+            height: clamp(11rem, 36vw, 15rem);
+        }
     }
 
     @media (min-width: 768px) {
+        .menu-hero {
+            min-height: 16rem;
+        }
+
         .menu-hero__media {
             height: clamp(16rem, 28vw, 22rem);
         }
@@ -259,7 +307,13 @@ html.dark {
     .menu-product-card {
         box-shadow: var(--ss-card-shadow);
         content-visibility: auto;
-        contain-intrinsic-size: auto 380px;
+        contain-intrinsic-size: auto 220px;
+    }
+
+    @media (min-width: 768px) {
+        .menu-product-card {
+            contain-intrinsic-size: auto 380px;
+        }
     }
 
     .menu-product-card:hover {

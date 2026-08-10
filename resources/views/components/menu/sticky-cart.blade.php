@@ -6,26 +6,41 @@
 
 @php
     use App\Support\Money;
+    $isEmpty = (int) $cartCount <= 0;
+    $countLabel = (int) $cartCount === 1 ? 'منتج' : 'منتجات';
 @endphp
 
-@if ($cartCount > 0)
-    <div class="pointer-events-none fixed bottom-20 inset-x-0 z-40 px-4 md:bottom-6 md:px-8">
-        <div class="mx-auto flex max-w-7xl justify-center md:justify-end">
-            <a
-                href="{{ route('cart.index') }}"
-                class="pointer-events-auto flex w-full max-w-md items-center justify-between rounded-2xl bg-inverse-surface px-5 py-3.5 text-inverse-on-surface shadow-lg transition hover:opacity-95"
-            >
-                <div class="flex items-center gap-3">
-                    <div
-                        class="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-on-primary"
-                        data-cart-count="{{ $cartCount }}"
-                    >{{ $cartCount }}</div>
-                    <span class="text-sm font-semibold">عرض السلة</span>
+{{-- Mobile-only floating cart — always in DOM so JS can reveal after add-to-cart --}}
+<div
+    data-floating-cart-wrap
+    @class([
+        'pointer-events-none fixed inset-x-0 z-40 px-3 md:hidden',
+        'hidden' => $isEmpty,
+    ])
+    style="bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));"
+    @if ($isEmpty) hidden @endif
+>
+    <div class="mx-auto flex max-w-lg justify-center">
+        <a
+            href="{{ route('cart.index') }}"
+            data-floating-cart
+            class="floating-cart pointer-events-auto flex w-full items-center justify-between gap-3 rounded-2xl bg-primary px-4 py-3 text-on-primary shadow-lg ring-1 ring-black/10 transition hover:bg-primary-container active:scale-[0.99]"
+            aria-label="فتح السلة"
+        >
+            <div class="flex min-w-0 items-center gap-2.5">
+                <span class="material-symbols-outlined shrink-0 text-[22px]" aria-hidden="true">shopping_cart</span>
+                <div class="min-w-0">
+                    <span class="block text-sm font-bold leading-tight">السلة</span>
+                    <span class="block text-xs font-medium leading-tight text-on-primary/90">
+                        <span data-cart-count="{{ $cartCount }}">{{ $cartCount }}</span>
+                        <span data-cart-count-label>{{ $countLabel }}</span>
+                    </span>
                 </div>
-                <span class="text-base font-bold text-inverse-primary tabular-nums">
-                    {{ Money::format($cartSubtotal, $cartCurrency) }}
-                </span>
-            </a>
-        </div>
+            </div>
+            <span
+                data-cart-subtotal
+                class="shrink-0 text-sm font-bold tabular-nums"
+            >{{ Money::format($cartSubtotal, $cartCurrency) }}</span>
+        </a>
     </div>
-@endif
+</div>

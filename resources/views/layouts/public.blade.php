@@ -62,13 +62,13 @@
     @stack('head')
     @stack('styles')
 </head>
-<body class="bg-background text-on-background font-sans antialiased pb-24 md:pb-0 min-h-screen overflow-x-hidden">
+<body class="bg-background text-on-background font-sans antialiased pb-[calc(6.5rem+env(safe-area-inset-bottom,0px))] md:pb-0 min-h-screen overflow-x-hidden">
     <x-page-loader />
     @yield('content')
 
     <div
         id="menu-toast"
-        class="hidden fixed bottom-24 md:bottom-8 left-1/2 z-70 -translate-x-1/2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-on-primary shadow-lg"
+        class="hidden fixed bottom-[calc(7.25rem+env(safe-area-inset-bottom,0px))] md:bottom-8 left-1/2 z-70 max-w-[min(92vw,22rem)] -translate-x-1/2 rounded-xl bg-primary px-3 py-2 text-xs font-semibold text-on-primary shadow-lg sm:px-4 sm:py-2.5 sm:text-sm"
         role="status"
         aria-live="polite"
     ></div>
