@@ -49,6 +49,7 @@
     $isQr = request()->routeIs('admin.qr-code.*');
     $isSettings = request()->routeIs('admin.settings.*');
     $isProfile = request()->routeIs('admin.profile*');
+    $isMoreSection = $isQr || $isSettings || $isProfile;
 @endphp
 
 @hasSection('body')
@@ -137,8 +138,8 @@
             </div>
         </aside>
 
-        <main class="admin-main w-full flex-1 overflow-y-auto bg-surface-container-low p-margin-mobile pb-28 md:mr-64 md:p-margin-desktop md:pb-margin-desktop">
-            <div class="mx-auto max-w-[1280px]">
+        <main class="admin-main w-full flex-1 overflow-y-auto bg-surface-container-low p-3 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] sm:p-margin-mobile sm:pb-28 md:mr-64 md:p-margin-desktop md:pb-margin-desktop">
+            <div class="mx-auto w-full max-w-[1280px]">
                 @include('admin.partials.flash')
                 @yield('content')
             </div>
@@ -146,31 +147,118 @@
     </div>
 
     {{-- Mobile bottom nav --}}
-    <nav class="fixed inset-x-0 bottom-0 z-50 flex items-center justify-around rounded-t-xl border-t border-outline-variant bg-surface-container-lowest px-2 py-2 pb-safe shadow-(--ss-bottom-nav-shadow) dark:bg-surface-container md:hidden" aria-label="التنقل السريع">
+    <nav class="fixed inset-x-0 bottom-0 z-50 flex items-stretch justify-around gap-0.5 rounded-t-xl border-t border-outline-variant bg-surface-container-lowest px-1 py-1.5 pb-safe shadow-(--ss-bottom-nav-shadow) dark:bg-surface-container md:hidden" aria-label="التنقل السريع">
         <a href="{{ route('admin.dashboard') }}" @class(['admin-mobile-nav-link', 'is-active' => $isDashboard])>
-            <span class="material-symbols-outlined mb-0.5" aria-hidden="true">dashboard</span>
-            <span class="text-[11px] font-medium">Dashboard</span>
+            <span class="material-symbols-outlined mb-0.5 text-[22px]" aria-hidden="true">dashboard</span>
+            <span class="text-[10px] font-medium leading-tight sm:text-[11px]">الرئيسية</span>
         </a>
         <a href="{{ route('admin.orders.index') }}" @class(['admin-mobile-nav-link', 'is-active' => $isOrders])>
-            <span class="material-symbols-outlined mb-0.5" aria-hidden="true">receipt_long</span>
-            <span class="text-[11px] font-medium">الطلبات</span>
+            <span class="material-symbols-outlined mb-0.5 text-[22px]" aria-hidden="true">receipt_long</span>
+            <span class="text-[10px] font-medium leading-tight sm:text-[11px]">الطلبات</span>
             @if (($pendingOrdersCount ?? 0) > 0)
                 <span class="nav-count absolute -top-0.5 inset-e-1">{{ $pendingOrdersCount }}</span>
             @endif
         </a>
         <a href="{{ route('admin.products.index') }}" @class(['admin-mobile-nav-link', 'is-active' => $isProducts])>
-            <span class="material-symbols-outlined mb-0.5" aria-hidden="true">restaurant_menu</span>
-            <span class="text-[11px] font-medium">الأصناف</span>
+            <span class="material-symbols-outlined mb-0.5 text-[22px]" aria-hidden="true">restaurant_menu</span>
+            <span class="text-[10px] font-medium leading-tight sm:text-[11px]">المنتجات</span>
         </a>
         <a href="{{ route('admin.categories.index') }}" @class(['admin-mobile-nav-link', 'is-active' => $isCategories])>
-            <span class="material-symbols-outlined mb-0.5" aria-hidden="true">category</span>
-            <span class="text-[11px] font-medium">التصنيفات</span>
+            <span class="material-symbols-outlined mb-0.5 text-[22px]" aria-hidden="true">category</span>
+            <span class="text-[10px] font-medium leading-tight sm:text-[11px]">التصنيفات</span>
         </a>
-        <a href="{{ route('admin.qr-code.index') }}" @class(['admin-mobile-nav-link', 'is-active' => $isQr])>
-            <span class="material-symbols-outlined mb-0.5" aria-hidden="true">qr_code_2</span>
-            <span class="text-[11px] font-medium">QR</span>
-        </a>
+        <button
+            type="button"
+            id="admin-more-nav-btn"
+            @class(['admin-mobile-nav-link', 'is-active' => $isMoreSection])
+            aria-label="المزيد"
+            aria-haspopup="dialog"
+            aria-controls="admin-more-sheet"
+            aria-expanded="false"
+            data-admin-more-open
+        >
+            <span class="material-symbols-outlined mb-0.5 text-[22px]" aria-hidden="true">menu</span>
+            <span class="text-[10px] font-medium leading-tight sm:text-[11px]">المزيد</span>
+        </button>
     </nav>
+
+    {{-- Mobile "More" bottom sheet --}}
+    <div
+        id="admin-more-sheet"
+        class="admin-more-sheet fixed inset-0 z-[60] hidden md:hidden"
+        hidden
+        aria-hidden="true"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="admin-more-sheet-title"
+    >
+        <div class="absolute inset-0 bg-black/45 backdrop-blur-[1px]" data-admin-more-close tabindex="-1"></div>
+
+        <div class="admin-more-sheet__panel absolute inset-x-0 bottom-0 max-h-[min(85dvh,32rem)] overflow-y-auto rounded-t-2xl border-t border-outline-variant bg-surface-container-lowest shadow-2xl dark:bg-surface-container">
+            <div class="sticky top-0 z-10 flex items-center justify-between border-b border-outline-variant/60 bg-surface-container-lowest px-4 py-3 dark:bg-surface-container">
+                <h2 id="admin-more-sheet-title" class="text-base font-bold text-on-surface">المزيد</h2>
+                <button
+                    type="button"
+                    class="flex h-11 w-11 items-center justify-center rounded-full text-on-surface transition-colors hover:bg-surface-variant"
+                    aria-label="إغلاق"
+                    data-admin-more-close
+                >
+                    <span class="material-symbols-outlined text-[22px]" aria-hidden="true">close</span>
+                </button>
+            </div>
+
+            <nav class="flex flex-col gap-1 p-3 pb-[max(1rem,env(safe-area-inset-bottom))]" aria-label="المزيد من صفحات الإدارة">
+                <a
+                    href="{{ route('admin.settings.edit') }}"
+                    @class(['admin-more-link', 'is-active' => $isSettings])
+                >
+                    <span class="admin-more-link__icon material-symbols-outlined" aria-hidden="true">storefront</span>
+                    <span class="min-w-0 flex-1 text-start">
+                        <span class="block text-sm font-semibold">إدارة المطعم</span>
+                        <span class="block text-xs text-on-surface-variant">إعدادات وبيانات المطعم</span>
+                    </span>
+                    <span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">chevron_left</span>
+                </a>
+
+                <a
+                    href="{{ route('admin.qr-code.index') }}"
+                    @class(['admin-more-link', 'is-active' => $isQr])
+                >
+                    <span class="admin-more-link__icon material-symbols-outlined" aria-hidden="true">qr_code_2</span>
+                    <span class="min-w-0 flex-1 text-start">
+                        <span class="block text-sm font-semibold">QR كود المينيو</span>
+                        <span class="block text-xs text-on-surface-variant">عرض وتحميل QR</span>
+                    </span>
+                    <span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">chevron_left</span>
+                </a>
+
+                <a
+                    href="{{ route('admin.profile') }}"
+                    @class(['admin-more-link', 'is-active' => $isProfile])
+                >
+                    <span class="admin-more-link__icon material-symbols-outlined" aria-hidden="true">person</span>
+                    <span class="min-w-0 flex-1 text-start">
+                        <span class="block text-sm font-semibold">الملف الشخصي</span>
+                        <span class="block text-xs text-on-surface-variant">معلومات الحساب</span>
+                    </span>
+                    <span class="material-symbols-outlined text-on-surface-variant" aria-hidden="true">chevron_left</span>
+                </a>
+
+                <div class="my-2 border-t border-outline-variant/60"></div>
+
+                <form method="POST" action="{{ route('admin.logout') }}">
+                    @csrf
+                    <button type="submit" class="admin-more-link w-full text-start">
+                        <span class="admin-more-link__icon material-symbols-outlined text-error" aria-hidden="true">logout</span>
+                        <span class="min-w-0 flex-1">
+                            <span class="block text-sm font-semibold text-error">تسجيل الخروج</span>
+                            <span class="block text-xs text-on-surface-variant">إنهاء جلسة الإدارة</span>
+                        </span>
+                    </button>
+                </form>
+            </nav>
+        </div>
+    </div>
 @endif
 
 @stack('scripts')
