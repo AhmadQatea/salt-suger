@@ -1,11 +1,8 @@
 /**
- * Branded page loader.
- * Normal loads stay visible for at least 0.2s (then wait for load on slow networks).
- * Category filter navigations set ss-fast-nav to skip the loader entirely.
+ * Branded page loader — hides immediately when the page is ready on fast networks.
+ * Internal navigations set ss-fast-nav to skip the loader entirely.
  */
-const LOADER_MIN_MS = 200;
 const LOADER_MAX_MS = 8000;
-const startedAt = Date.now();
 
 function hidePageLoader() {
     const loader = document.getElementById('ss-page-loader');
@@ -19,29 +16,42 @@ function hidePageLoader() {
 
     window.setTimeout(() => {
         loader.remove();
-    }, 180);
+    }, 160);
 }
 
 function scheduleHide() {
-    const elapsed = Date.now() - startedAt;
-    const remaining = Math.max(0, LOADER_MIN_MS - elapsed);
-
-    window.setTimeout(hidePageLoader, remaining);
+    hidePageLoader();
 }
 
 document.addEventListener('click', (event) => {
     const link = event.target instanceof Element
-        ? event.target.closest('a[data-fast-nav]')
+        ? event.target.closest('a[href]')
         : null;
 
-    if (! link) {
+    if (! link || link.target === '_blank' || link.hasAttribute('download')) {
+        return;
+    }
+
+    const href = link.getAttribute('href');
+
+    if (! href || href.startsWith('#') || href.startsWith('mailto:') || href.startsWith('tel:')) {
         return;
     }
 
     try {
+        const url = new URL(href, window.location.href);
+
+        if (url.origin !== window.location.origin) {
+            return;
+        }
+
+        if (url.pathname === window.location.pathname && url.search === window.location.search) {
+            return;
+        }
+
         sessionStorage.setItem('ss-fast-nav', '1');
     } catch (e) {
-        // Ignore private-mode storage failures.
+        // Ignore invalid URLs.
     }
 }, { capture: true, passive: true });
 
@@ -51,6 +61,7 @@ if (window.__ssFastNav) {
     scheduleHide();
     window.setTimeout(hidePageLoader, LOADER_MAX_MS);
 } else {
+    document.addEventListener('DOMContentLoaded', scheduleHide, { once: true });
     window.addEventListener('load', scheduleHide, { once: true });
     window.setTimeout(hidePageLoader, LOADER_MAX_MS);
 }

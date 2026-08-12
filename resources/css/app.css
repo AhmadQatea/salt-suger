@@ -480,13 +480,21 @@ html.dark {
         @apply pe-11;
     }
 
-    .password-field__toggle {
-        @apply absolute inset-y-0 inset-e-0 flex w-11 items-center justify-center rounded-lg text-on-surface-variant transition-colors hover:text-on-surface focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
+    .ss-icon-toggle {
+        @apply inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-outline-variant/40 bg-surface-container text-on-surface transition-colors hover:bg-surface-variant focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
     }
 
-    .password-field__toggle .material-symbols-outlined {
+    .ss-icon-toggle--inset {
+        @apply absolute inset-y-0 inset-e-0 h-full w-11 rounded-none border-0 bg-transparent hover:bg-surface-variant/60;
+    }
+
+    .ss-icon-toggle__icon {
         font-size: 1.25rem;
         line-height: 1;
+    }
+
+    .password-field__toggle {
+        @apply text-on-surface-variant hover:text-on-surface;
     }
 
     .btn-primary,

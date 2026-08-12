@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Facades\Storage;
+use App\Support\PublicStorage;
 
 class Product extends Model
 {
@@ -27,7 +27,6 @@ class Product extends Model
         'image',
         'badge',
         'is_available',
-        'sort_order',
     ];
 
     /**
@@ -38,7 +37,6 @@ class Product extends Model
         return [
             'price' => 'decimal:2',
             'is_available' => 'boolean',
-            'sort_order' => 'integer',
         ];
     }
 
@@ -75,10 +73,6 @@ class Product extends Model
 
     public function imageUrl(): ?string
     {
-        if (! $this->image || ! Storage::disk('public')->exists($this->image)) {
-            return null;
-        }
-
-        return asset('storage/'.$this->image);
+        return PublicStorage::url($this->image, $this->updated_at?->timestamp);
     }
 }

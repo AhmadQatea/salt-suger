@@ -49,7 +49,6 @@ class ProductManagementTest extends TestCase
                 'price' => '25000.00',
                 'badge' => 'جديد',
                 'is_available' => 1,
-                'sort_order' => 1,
             ])
             ->assertRedirect(route('admin.products.index'))
             ->assertSessionHas('status');
@@ -82,7 +81,6 @@ class ProductManagementTest extends TestCase
                 'price' => '27000.50',
                 'badge' => 'الأكثر طلباً',
                 'is_available' => 1,
-                'sort_order' => 2,
             ])
             ->assertRedirect(route('admin.products.index'));
 
@@ -195,7 +193,6 @@ class ProductManagementTest extends TestCase
                 'category_id' => $category->id,
                 'price' => '25000.00',
                 'is_available' => 1,
-                'sort_order' => 0,
                 'image' => $file,
             ])
             ->assertRedirect(route('admin.products.index'));
@@ -220,7 +217,6 @@ class ProductManagementTest extends TestCase
                 'category_id' => $category->id,
                 'price' => '25000.00',
                 'is_available' => 1,
-                'sort_order' => 0,
                 'image' => $file,
             ])
             ->assertRedirect(route('admin.products.create'))
@@ -249,7 +245,6 @@ class ProductManagementTest extends TestCase
                 'category_id' => $product->category_id,
                 'price' => '20000.00',
                 'is_available' => 1,
-                'sort_order' => 0,
                 'image' => $newFile,
             ])
             ->assertRedirect(route('admin.products.index'));

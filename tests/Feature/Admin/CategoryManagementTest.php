@@ -44,7 +44,6 @@ class CategoryManagementTest extends TestCase
                 'name' => 'برغر',
                 'description' => 'تصنيف البرغر',
                 'is_active' => 1,
-                'sort_order' => 1,
             ]);
 
         $response->assertRedirect(route('admin.categories.index'));
@@ -54,7 +53,6 @@ class CategoryManagementTest extends TestCase
             'name' => 'برغر',
             'slug' => 'burger',
             'is_active' => true,
-            'sort_order' => 1,
         ]);
     }
 
@@ -70,7 +68,6 @@ class CategoryManagementTest extends TestCase
                 'name' => 'برغر مميز',
                 'description' => 'وصف محدث',
                 'is_active' => 1,
-                'sort_order' => 5,
             ])
             ->assertRedirect(route('admin.categories.index'));
 
@@ -78,7 +75,6 @@ class CategoryManagementTest extends TestCase
 
         $this->assertSame('برغر مميز', $category->name);
         $this->assertSame('burger', $category->slug);
-        $this->assertSame(5, $category->sort_order);
     }
 
     public function test_admin_can_deactivate_category(): void
@@ -167,7 +163,6 @@ class CategoryManagementTest extends TestCase
             ->post(route('admin.categories.store'), [
                 'name' => 'برغر',
                 'is_active' => 1,
-                'sort_order' => 0,
                 'image' => $file,
             ])
             ->assertRedirect(route('admin.categories.index'));

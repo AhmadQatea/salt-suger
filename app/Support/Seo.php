@@ -4,7 +4,6 @@ namespace App\Support;
 
 use App\Models\Category;
 use App\Models\RestaurantSetting;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 /**
@@ -117,11 +116,7 @@ class Seo
 
     public function logoUrl(): string
     {
-        if ($this->settings->logo && Storage::disk('public')->exists($this->settings->logo)) {
-            return asset('storage/'.$this->settings->logo);
-        }
-
-        return asset('images/logo.png');
+        return $this->settings->logoUrl(asset('images/logo.png'));
     }
 
     public function imageUrl(): string

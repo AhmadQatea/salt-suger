@@ -22,7 +22,6 @@ class UpdateCategoryRequest extends FormRequest
             'image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
             'remove_image' => ['sometimes', 'boolean'],
             'is_active' => ['sometimes', 'boolean'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
         ];
     }
 
@@ -37,8 +36,6 @@ class UpdateCategoryRequest extends FormRequest
             'image.image' => 'يجب أن يكون الملف صورة.',
             'image.mimes' => 'صيغة الصورة يجب أن تكون jpeg أو jpg أو png أو webp.',
             'image.max' => 'حجم الصورة يجب ألا يتجاوز 2 ميغابايت.',
-            'sort_order.integer' => 'ترتيب التصنيف يجب أن يكون رقماً صحيحاً.',
-            'sort_order.min' => 'ترتيب التصنيف لا يمكن أن يكون سالباً.',
         ];
     }
 
@@ -52,7 +49,6 @@ class UpdateCategoryRequest extends FormRequest
             'description' => 'وصف التصنيف',
             'image' => 'صورة التصنيف',
             'is_active' => 'حالة التصنيف',
-            'sort_order' => 'ترتيب التصنيف',
         ];
     }
 
@@ -61,7 +57,6 @@ class UpdateCategoryRequest extends FormRequest
         $this->merge([
             'is_active' => $this->boolean('is_active'),
             'remove_image' => $this->boolean('remove_image'),
-            'sort_order' => $this->input('sort_order', 0),
         ]);
     }
 }

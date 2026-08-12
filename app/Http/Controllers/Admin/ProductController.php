@@ -41,13 +41,11 @@ class ProductController extends Controller
             ->when($availability === 'unavailable', function ($query) {
                 $query->where('is_available', false);
             })
-            ->orderBy('sort_order')
             ->orderBy('name')
             ->paginate(12)
             ->withQueryString();
 
         $categories = Category::query()
-            ->orderBy('sort_order')
             ->orderBy('name')
             ->get(['id', 'name']);
 
@@ -63,7 +61,6 @@ class ProductController extends Controller
     public function create(): View
     {
         $categories = Category::query()
-            ->orderBy('sort_order')
             ->orderBy('name')
             ->get(['id', 'name']);
 
@@ -90,7 +87,6 @@ class ProductController extends Controller
     public function edit(Product $product): View
     {
         $categories = Category::query()
-            ->orderBy('sort_order')
             ->orderBy('name')
             ->get(['id', 'name']);
 

@@ -22,7 +22,6 @@ class ProductSeeder extends Seeder
                     'price' => '25000.00',
                     'image' => 'products/classic-burger.webp',
                     'badge' => 'الأكثر طلباً',
-                    'sort_order' => 1,
                 ],
                 [
                     'name' => 'برغر دبل',
@@ -31,7 +30,6 @@ class ProductSeeder extends Seeder
                     'price' => '35000.00',
                     'image' => 'products/double-burger.webp',
                     'badge' => null,
-                    'sort_order' => 2,
                 ],
                 [
                     'name' => 'برغر تشيكن',
@@ -40,7 +38,6 @@ class ProductSeeder extends Seeder
                     'price' => '22000.00',
                     'image' => 'products/chicken-burger.webp',
                     'badge' => 'جديد',
-                    'sort_order' => 3,
                 ],
             ],
             'meals' => [
@@ -51,7 +48,6 @@ class ProductSeeder extends Seeder
                     'price' => '40000.00',
                     'image' => 'products/classic-burger-meal.webp',
                     'badge' => 'عرض خاص',
-                    'sort_order' => 1,
                 ],
                 [
                     'name' => 'وجبة دجاج عائلي',
@@ -60,7 +56,6 @@ class ProductSeeder extends Seeder
                     'price' => '85000.00',
                     'image' => 'products/family-chicken-meal.webp',
                     'badge' => null,
-                    'sort_order' => 2,
                 ],
             ],
             'sandwich' => [
@@ -71,7 +66,6 @@ class ProductSeeder extends Seeder
                     'price' => '18000.00',
                     'image' => 'products/chicken-shawarma-sandwich.webp',
                     'badge' => null,
-                    'sort_order' => 1,
                 ],
                 [
                     'name' => 'ساندويش فلافل',
@@ -80,7 +74,6 @@ class ProductSeeder extends Seeder
                     'price' => '12000.00',
                     'image' => 'products/falafel-sandwich.webp',
                     'badge' => null,
-                    'sort_order' => 2,
                 ],
             ],
             'pizza' => [
@@ -91,7 +84,6 @@ class ProductSeeder extends Seeder
                     'price' => '30000.00',
                     'image' => 'products/margherita-pizza.webp',
                     'badge' => null,
-                    'sort_order' => 1,
                 ],
                 [
                     'name' => 'بيتزا خضار',
@@ -100,7 +92,6 @@ class ProductSeeder extends Seeder
                     'price' => '32000.00',
                     'image' => 'products/veggie-pizza.webp',
                     'badge' => 'جديد',
-                    'sort_order' => 2,
                 ],
             ],
             'appetizers' => [
@@ -111,7 +102,6 @@ class ProductSeeder extends Seeder
                     'price' => '10000.00',
                     'image' => 'products/onion-rings.webp',
                     'badge' => null,
-                    'sort_order' => 1,
                 ],
                 [
                     'name' => 'ناجتس دجاج',
@@ -120,7 +110,6 @@ class ProductSeeder extends Seeder
                     'price' => '15000.00',
                     'image' => 'products/chicken-nuggets.webp',
                     'badge' => null,
-                    'sort_order' => 2,
                 ],
             ],
             'fries' => [
@@ -131,7 +120,6 @@ class ProductSeeder extends Seeder
                     'price' => '8000.00',
                     'image' => 'products/regular-fries.webp',
                     'badge' => null,
-                    'sort_order' => 1,
                 ],
                 [
                     'name' => 'بطاطا بالجبنة',
@@ -140,7 +128,6 @@ class ProductSeeder extends Seeder
                     'price' => '12000.00',
                     'image' => 'products/cheese-fries.webp',
                     'badge' => 'الأكثر طلباً',
-                    'sort_order' => 2,
                 ],
             ],
             'drinks' => [
@@ -151,7 +138,6 @@ class ProductSeeder extends Seeder
                     'price' => '5000.00',
                     'image' => 'products/cola.webp',
                     'badge' => null,
-                    'sort_order' => 1,
                 ],
                 [
                     'name' => 'عصير برتقال طازج',
@@ -160,7 +146,6 @@ class ProductSeeder extends Seeder
                     'price' => '9000.00',
                     'image' => 'products/fresh-orange-juice.webp',
                     'badge' => null,
-                    'sort_order' => 2,
                 ],
             ],
             'desserts' => [
@@ -171,7 +156,6 @@ class ProductSeeder extends Seeder
                     'price' => '14000.00',
                     'image' => 'products/chocolate-brownie.webp',
                     'badge' => null,
-                    'sort_order' => 1,
                 ],
                 [
                     'name' => 'آيس كريم فانيلا',
@@ -180,7 +164,6 @@ class ProductSeeder extends Seeder
                     'price' => '7000.00',
                     'image' => 'products/vanilla-ice-cream.webp',
                     'badge' => null,
-                    'sort_order' => 2,
                 ],
             ],
         ];
@@ -199,7 +182,6 @@ class ProductSeeder extends Seeder
                         'image' => $product['image'],
                         'badge' => $product['badge'],
                         'is_available' => true,
-                        'sort_order' => $product['sort_order'],
                     ]
                 );
             }

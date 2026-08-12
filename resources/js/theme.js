@@ -21,13 +21,9 @@
         root.dataset.theme = theme;
 
         document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
-            const lightIcon = button.querySelector('[data-theme-icon="light"]');
-            const darkIcon = button.querySelector('[data-theme-icon="dark"]');
-            if (lightIcon) {
-                lightIcon.classList.toggle('hidden', isDark);
-            }
-            if (darkIcon) {
-                darkIcon.classList.toggle('hidden', !isDark);
+            const icon = button.querySelector('[data-theme-icon]');
+            if (icon) {
+                icon.textContent = isDark ? 'light_mode' : 'dark_mode';
             }
             button.setAttribute('aria-pressed', isDark ? 'true' : 'false');
             button.setAttribute(

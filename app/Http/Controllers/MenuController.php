@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\RestaurantSetting;
+use App\Support\PublicStorage;
 use App\Support\Seo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
 
@@ -49,7 +49,7 @@ class MenuController extends Controller
         if ($selectedCategory) {
             $products = $selectedCategory->relationLoaded('availableProducts')
                 ? $selectedCategory->availableProducts
-                : $selectedCategory->availableProducts()->orderBy('sort_order')->orderBy('name')->get();
+                : $selectedCategory->availableProducts()->orderBy('name')->get();
         } else {
             $products = $categories
                 ->flatMap(fn (Category $item) => $item->availableProducts)
@@ -108,7 +108,7 @@ class MenuController extends Controller
         return Cache::remember(Category::MENU_CACHE_KEY, now()->addMinutes(30), function () {
             return Category::query()
                 ->active()
-                ->select(['id', 'name', 'slug', 'description', 'image', 'sort_order', 'is_active', 'updated_at'])
+                ->select(['id', 'name', 'slug', 'description', 'image', 'is_active', 'updated_at'])
                 ->with(['availableProducts' => function ($query) {
                     $query->select([
                         'id',
@@ -120,10 +120,9 @@ class MenuController extends Controller
                         'image',
                         'badge',
                         'is_available',
-                        'sort_order',
-                    ])->orderBy('sort_order')->orderBy('name');
+                        'updated_at',
+                    ])->orderBy('name');
                 }])
-                ->orderBy('sort_order')
                 ->orderBy('name')
                 ->get();
         });
@@ -131,10 +130,6 @@ class MenuController extends Controller
 
     protected function logoUrl(RestaurantSetting $settings): string
     {
-        if ($settings->logo && Storage::disk('public')->exists($settings->logo)) {
-            return asset('storage/'.$settings->logo);
-        }
-
-        return asset('images/logo.png');
+        return $settings->logoUrl(asset('images/logo.png'));
     }
 }

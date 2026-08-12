@@ -7,7 +7,7 @@ use App\Http\Requests\Admin\UpdateRestaurantSettingRequest;
 use App\Models\RestaurantSetting;
 use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
+use App\Support\PublicStorage;
 use Illuminate\View\View;
 
 class RestaurantSettingController extends Controller
@@ -68,10 +68,6 @@ class RestaurantSettingController extends Controller
 
     protected function heroPreviewUrl(RestaurantSetting $settings): ?string
     {
-        if ($settings->hero_image && Storage::disk('public')->exists($settings->hero_image)) {
-            return asset('storage/'.$settings->hero_image);
-        }
-
-        return null;
+        return PublicStorage::url($settings->hero_image, $settings->updated_at?->timestamp);
     }
 }

@@ -30,7 +30,6 @@ class ProductFactory extends Factory
             'image' => null,
             'badge' => fake()->optional()->randomElement(['جديد', 'الأكثر طلباً', 'عرض خاص']),
             'is_available' => true,
-            'sort_order' => fake()->numberBetween(0, 100),
         ];
     }
 

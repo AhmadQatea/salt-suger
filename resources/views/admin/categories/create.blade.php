@@ -34,12 +34,6 @@
                 @error('image') <p class="form-error">{{ $message }}</p> @enderror
             </div>
 
-            <div>
-                <label for="sort_order">ترتيب التصنيف</label>
-                <input id="sort_order" type="number" name="sort_order" min="0" value="{{ old('sort_order', 0) }}">
-                @error('sort_order') <p class="form-error">{{ $message }}</p> @enderror
-            </div>
-
             <label class="admin-checkbox" for="is_active">
                 <input id="is_active" type="checkbox" name="is_active" value="1" @checked(old('is_active', true))>
                 <span>حالة التصنيف (مفعّل)</span>

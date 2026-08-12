@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Support\PublicStorage;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 
 class Category extends Model
 {
@@ -26,7 +26,6 @@ class Category extends Model
         'description',
         'image',
         'is_active',
-        'sort_order',
     ];
 
     /**
@@ -36,7 +35,6 @@ class Category extends Model
     {
         return [
             'is_active' => 'boolean',
-            'sort_order' => 'integer',
         ];
     }
 
@@ -80,10 +78,6 @@ class Category extends Model
 
     public function imageUrl(): ?string
     {
-        if (! $this->image || ! Storage::disk('public')->exists($this->image)) {
-            return null;
-        }
-
-        return asset('storage/'.$this->image);
+        return PublicStorage::url($this->image, $this->updated_at?->timestamp);
     }
 }

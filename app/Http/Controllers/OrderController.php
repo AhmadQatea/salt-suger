@@ -10,7 +10,6 @@ use App\Services\OrderService;
 use App\Services\WhatsAppService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
@@ -106,10 +105,6 @@ class OrderController extends Controller
 
     protected function logoUrl(RestaurantSetting $settings): string
     {
-        if ($settings->logo && Storage::disk('public')->exists($settings->logo)) {
-            return asset('storage/'.$settings->logo);
-        }
-
-        return asset('images/logo.png');
+        return $settings->logoUrl(asset('images/logo.png'));
     }
 }

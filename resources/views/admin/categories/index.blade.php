@@ -36,7 +36,6 @@
                             <th>الاسم</th>
                             <th>عدد الأصناف</th>
                             <th>الحالة</th>
-                            <th>الترتيب</th>
                             <th>إجراءات</th>
                         </tr>
                     </thead>
@@ -44,8 +43,8 @@
                         @foreach ($categories as $category)
                             <tr class="hover:bg-surface-container-low/80">
                                 <td>
-                                    @if ($category->image)
-                                        <img src="{{ asset('storage/'.$category->image) }}" alt="" class="thumb">
+                                    @if ($category->imageUrl())
+                                        <img src="{{ $category->imageUrl() }}" alt="" class="thumb">
                                     @else
                                         <span class="thumb-placeholder">بدون</span>
                                     @endif
@@ -60,7 +59,6 @@
                                         {{ $category->is_active ? 'مفعّل' : 'معطّل' }}
                                     </span>
                                 </td>
-                                <td>{{ $category->sort_order }}</td>
                                 <td>
                                     <div class="actions">
                                         <a href="{{ route('admin.categories.edit', $category) }}" class="btn-ghost btn-sm">تعديل</a>

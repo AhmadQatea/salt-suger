@@ -59,7 +59,7 @@ class PerformanceTest extends TestCase
         $this->assertStringContainsString('loading="lazy"', $html);
         $this->assertStringContainsString('width="400"', $html);
         $this->assertStringContainsString('height="400"', $html);
-        $this->assertStringContainsString('aspect-square', $html);
+        $this->assertStringContainsString('menu-product-card__media', $html);
     }
 
     public function test_public_assets_are_split_from_admin_bundle(): void

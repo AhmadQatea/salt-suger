@@ -26,7 +26,6 @@ class UpdateProductRequest extends FormRequest
             'image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:2048'],
             'remove_image' => ['sometimes', 'boolean'],
             'is_available' => ['sometimes', 'boolean'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
         ];
     }
 
@@ -47,7 +46,6 @@ class UpdateProductRequest extends FormRequest
             'image.image' => 'يجب أن يكون الملف صورة.',
             'image.mimes' => 'صيغة الصورة يجب أن تكون jpeg أو jpg أو png أو webp.',
             'image.max' => 'حجم الصورة يجب ألا يتجاوز 2 ميغابايت.',
-            'sort_order.min' => 'ترتيب الصنف لا يمكن أن يكون سالباً.',
         ];
     }
 
@@ -64,7 +62,6 @@ class UpdateProductRequest extends FormRequest
             'badge' => 'الشارة',
             'image' => 'صورة الصنف',
             'is_available' => 'التوفر',
-            'sort_order' => 'الترتيب',
         ];
     }
 
@@ -75,7 +72,6 @@ class UpdateProductRequest extends FormRequest
         $this->merge([
             'is_available' => $this->boolean('is_available'),
             'remove_image' => $this->boolean('remove_image'),
-            'sort_order' => $this->input('sort_order', 0),
             'badge' => $badge === '' ? null : $badge,
         ]);
     }

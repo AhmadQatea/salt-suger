@@ -29,14 +29,13 @@
         >
         <button
             type="button"
-            class="password-field__toggle"
+            class="password-field__toggle ss-icon-toggle ss-icon-toggle--inset"
             data-password-toggle
             aria-label="إظهار كلمة المرور"
             aria-pressed="false"
             aria-controls="{{ $inputId }}"
         >
-            <span class="material-symbols-outlined" data-password-icon="show" aria-hidden="true">visibility</span>
-            <span class="material-symbols-outlined hidden" data-password-icon="hide" aria-hidden="true">visibility_off</span>
+            <span class="material-symbols-outlined ss-icon-toggle__icon" data-password-icon aria-hidden="true">visibility</span>
         </button>
     </div>
 </div>

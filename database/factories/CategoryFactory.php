@@ -26,7 +26,6 @@ class CategoryFactory extends Factory
             'description' => fake()->optional()->sentence(),
             'image' => null,
             'is_active' => true,
-            'sort_order' => fake()->numberBetween(0, 100),
         ];
     }
 

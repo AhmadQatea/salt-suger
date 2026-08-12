@@ -8,7 +8,6 @@ use App\Models\RestaurantSetting;
 use App\Services\CartService;
 use App\Support\Money;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class CartController extends Controller
@@ -92,10 +91,6 @@ class CartController extends Controller
 
     protected function logoUrl(RestaurantSetting $settings): string
     {
-        if ($settings->logo && Storage::disk('public')->exists($settings->logo)) {
-            return asset('storage/'.$settings->logo);
-        }
-
-        return asset('images/logo.png');
+        return $settings->logoUrl(asset('images/logo.png'));
     }
 }

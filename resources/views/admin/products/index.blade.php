@@ -54,7 +54,6 @@
                             <th>السعر</th>
                             <th>الشارة</th>
                             <th>التوفر</th>
-                            <th>الترتيب</th>
                             <th>إجراءات</th>
                         </tr>
                     </thead>
@@ -62,8 +61,8 @@
                         @foreach ($products as $product)
                             <tr class="hover:bg-surface-container-low/80">
                                 <td>
-                                    @if ($product->image)
-                                        <img src="{{ asset('storage/'.$product->image) }}" alt="" class="thumb">
+                                    @if ($product->imageUrl())
+                                        <img src="{{ $product->imageUrl() }}" alt="" class="thumb">
                                     @else
                                         <span class="thumb-placeholder">بدون</span>
                                     @endif
@@ -86,7 +85,6 @@
                                         {{ $product->is_available ? 'متوفر' : 'غير متوفر' }}
                                     </span>
                                 </td>
-                                <td>{{ $product->sort_order }}</td>
                                 <td>
                                     <div class="actions">
                                         <a href="{{ route('admin.products.edit', $product) }}" class="btn-ghost btn-sm">تعديل</a>

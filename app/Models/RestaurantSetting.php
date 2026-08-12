@@ -5,8 +5,8 @@ namespace App\Models;
 use Database\Factories\RestaurantSettingFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Support\PublicStorage;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Storage;
 
 class RestaurantSetting extends Model
 {
@@ -96,10 +96,19 @@ class RestaurantSetting extends Model
      */
     public function heroImageUrl(?string $fallback = null): string
     {
-        if ($this->hero_image && Storage::disk('public')->exists($this->hero_image)) {
-            return asset('storage/'.$this->hero_image);
+        $hero = PublicStorage::url($this->hero_image, $this->updated_at?->timestamp);
+
+        if ($hero) {
+            return $hero;
         }
 
         return $fallback ?: asset('images/logo.png');
+    }
+
+    public function logoUrl(?string $fallback = null): string
+    {
+        $logo = PublicStorage::url($this->logo, $this->updated_at?->timestamp);
+
+        return $logo ?: ($fallback ?: asset('images/logo.png'));
     }
 }

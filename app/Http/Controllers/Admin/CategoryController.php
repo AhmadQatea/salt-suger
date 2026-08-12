@@ -29,7 +29,6 @@ class CategoryController extends Controller
             ->when($search !== '', function ($query) use ($search) {
                 $query->where('name', 'like', '%'.$search.'%');
             })
-            ->orderBy('sort_order')
             ->orderBy('name')
             ->paginate(15)
             ->withQueryString();
