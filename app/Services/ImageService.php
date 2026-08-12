@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
+use App\Support\PublicStorage;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class ImageService
@@ -17,7 +17,16 @@ class ImageService
         $extension = strtolower($file->getClientOriginalExtension() ?: $file->extension() ?: 'jpg');
         $filename = Str::uuid()->toString().'.'.$extension;
 
-        return $file->storeAs($directory, $filename, 'public');
+        $path = $file->storeAs($directory, $filename, [
+            'disk' => PublicStorage::DISK,
+            'visibility' => 'public',
+        ]);
+
+        if (! is_string($path) || $path === '') {
+            throw new \RuntimeException('Failed to store uploaded image.');
+        }
+
+        return $path;
     }
 
     /**
@@ -29,8 +38,8 @@ class ImageService
             return;
         }
 
-        if (Storage::disk('public')->exists($path)) {
-            Storage::disk('public')->delete($path);
+        if (PublicStorage::disk()->exists($path)) {
+            PublicStorage::disk()->delete($path);
         }
     }
 

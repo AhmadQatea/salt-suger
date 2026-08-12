@@ -9,9 +9,19 @@ use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\QrCodeController;
 use App\Http\Controllers\Admin\RestaurantSettingController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
+
+/*
+|--------------------------------------------------------------------------
+| Public uploaded media (local disk fallback — no storage:link required)
+|--------------------------------------------------------------------------
+*/
+Route::get('/media/{path}', [MediaController::class, 'show'])
+    ->where('path', '.*')
+    ->name('media.show');
 
 /*
 |--------------------------------------------------------------------------

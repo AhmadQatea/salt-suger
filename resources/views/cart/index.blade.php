@@ -2,7 +2,7 @@
 
 @php
     use App\Support\Money;
-    use Illuminate\Support\Facades\Storage;
+    use App\Support\PublicStorage;
     $restaurantName = $settings->restaurant_name ?: config('app.name');
     $seoTitle = 'السلة — '.$restaurantName;
     $seoDescription = 'سلة طلبك من '.$restaurantName.'. هذه الصفحة غير مخصصة لمحركات البحث.';
@@ -59,9 +59,7 @@
                 <div class="space-y-3 lg:col-span-2">
                     @foreach ($items as $item)
                         @php
-                            $image = ($item['image'] ?? null) && Storage::disk('public')->exists($item['image'])
-                                ? asset('storage/'.$item['image'])
-                                : $logoUrl;
+                            $image = PublicStorage::url($item['image'] ?? null) ?: $logoUrl;
                         @endphp
                         <article class="flex gap-3 rounded-2xl bg-surface-container-lowest p-3 ring-1 ring-outline-variant/25 sm:gap-4 sm:p-4">
                             <img

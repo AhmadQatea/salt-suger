@@ -60,9 +60,9 @@
 
             <div>
                 <label for="image">صورة الصنف</label>
-                @if ($product->image)
+                @if ($product->imageUrl())
                     <div class="mb-3">
-                        <img src="{{ asset('storage/'.$product->image) }}" alt="" class="thumb h-30 w-30">
+                        <img src="{{ $product->imageUrl() }}" alt="" class="thumb h-30 w-30">
                     </div>
                     <label class="admin-checkbox" for="remove_image">
                         <input id="remove_image" type="checkbox" name="remove_image" value="1">

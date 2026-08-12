@@ -1,17 +1,14 @@
 @php
-    use Illuminate\Support\Facades\Storage;
+    use App\Support\PublicStorage;
 
     $settings = ($settings ?? null) instanceof \App\Models\RestaurantSetting
         ? $settings
         : \App\Models\RestaurantSetting::cached();
 
-    $iconUrl = asset('images/logo.png');
-
-    if ($settings->favicon && Storage::disk('public')->exists($settings->favicon)) {
-        $iconUrl = asset('storage/'.$settings->favicon);
-    } elseif ($settings->logo && Storage::disk('public')->exists($settings->logo)) {
-        $iconUrl = asset('storage/'.$settings->logo);
-    }
+    $version = $settings->updated_at?->timestamp;
+    $iconUrl = PublicStorage::url($settings->favicon, $version)
+        ?: PublicStorage::url($settings->logo, $version)
+        ?: asset('images/logo.png');
 
     $appName = $settings->restaurant_name ?: config('app.name', 'Salt&Suger');
 @endphp
