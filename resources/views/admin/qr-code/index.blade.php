@@ -206,6 +206,16 @@
                 </div>
                 <p class="qr-copy-status" id="copy-status" aria-live="polite"></p>
 
+                <div class="qr-actions">
+                    @if ($qrSvg)
+                        <a href="{{ route('admin.qr-code.download', ['format' => 'svg']) }}" class="btn-primary">تحميل SVG</a>
+                        @if ($supportsPng)
+                            <a href="{{ route('admin.qr-code.download', ['format' => 'png']) }}" class="btn-secondary">تحميل PNG</a>
+                        @endif
+                        <button type="button" class="btn-ghost" id="print-qr">طباعة QR</button>
+                    @endif
+                </div>
+
                 <label for="ordering-menu-url" class="mb-1.5 mt-5 block font-bold text-on-surface">رابط منيو الطلب</label>
                 <p class="text-sm text-on-surface-variant">المنيو الكامل للطلب والتوصيل عبر السلة وواتساب.</p>
                 <div class="qr-url-box">
@@ -217,16 +227,6 @@
                         dir="ltr"
                         aria-label="رابط منيو الطلب"
                     >
-                </div>
-
-                <div class="qr-actions">
-                    @if ($qrSvg)
-                        <a href="{{ route('admin.qr-code.download', ['format' => 'svg']) }}" class="btn-primary">تحميل SVG</a>
-                        @if ($supportsPng)
-                            <a href="{{ route('admin.qr-code.download', ['format' => 'png']) }}" class="btn-secondary">تحميل PNG</a>
-                        @endif
-                        <button type="button" class="btn-ghost" id="print-qr">طباعة QR</button>
-                    @endif
                 </div>
 
                 <p class="qr-hint">
