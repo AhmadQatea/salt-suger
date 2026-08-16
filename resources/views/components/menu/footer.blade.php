@@ -1,6 +1,9 @@
 @props([
     'settings',
     'categories' => collect(),
+    'homeRoute' => 'home',
+    'menuIndexRoute' => 'menu.index',
+    'menuCategoryRoute' => 'menu.category',
 ])
 
 @php
@@ -23,11 +26,11 @@
             </div>
 
             <nav aria-label="روابط مفيدة" class="flex flex-wrap gap-x-5 gap-y-2 text-sm font-semibold">
-                <a href="{{ route('home') }}" class="text-on-surface-variant transition hover:text-primary">الرئيسية</a>
-                <a href="{{ route('menu.index') }}" class="text-on-surface-variant transition hover:text-primary">المنيو</a>
+                <a href="{{ route($homeRoute) }}" class="text-on-surface-variant transition hover:text-primary">الرئيسية</a>
+                <a href="{{ route($menuIndexRoute) }}" class="text-on-surface-variant transition hover:text-primary">المنيو</a>
                 @foreach ($categories->take(6) as $category)
                     <a
-                        href="{{ route('menu.category', $category) }}"
+                        href="{{ route($menuCategoryRoute, $category) }}"
                         class="text-on-surface-variant transition hover:text-primary"
                     >{{ $category->name }}</a>
                 @endforeach

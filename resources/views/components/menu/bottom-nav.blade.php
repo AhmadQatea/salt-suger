@@ -1,5 +1,6 @@
 @props([
     'cartCount' => 0,
+    'menuIndexRoute' => 'menu.index',
 ])
 
 <nav
@@ -7,13 +8,13 @@
     aria-label="التنقل السفلي"
 >
     <a
-        href="{{ route('menu.index') }}"
+        href="{{ route($menuIndexRoute) }}"
         @class([
             'flex min-w-20 flex-col items-center justify-center rounded-xl px-3 py-2 transition-colors',
-            'bg-primary/10 text-primary' => request()->routeIs('home', 'menu.index', 'menu.category'),
-            'text-on-surface-variant' => ! request()->routeIs('home', 'menu.index', 'menu.category'),
+            'bg-primary/10 text-primary' => request()->routeIs('home', 'menu.index', 'menu.category', 'order.*'),
+            'text-on-surface-variant' => ! request()->routeIs('home', 'menu.index', 'menu.category', 'order.*'),
         ])
-        @if (request()->routeIs('home', 'menu.index', 'menu.category')) aria-current="page" @endif
+        @if (request()->routeIs('home', 'menu.index', 'menu.category', 'order.*')) aria-current="page" @endif
     >
         <span class="material-symbols-outlined text-[22px]" aria-hidden="true">home</span>
         <span class="mt-0.5 text-[11px] font-medium">الرئيسية</span>

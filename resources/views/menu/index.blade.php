@@ -11,7 +11,12 @@
 @endpush
 
 @section('content')
-    <x-menu.header :settings="$settings" :logo-url="$logoUrl" />
+    <x-menu.header
+        :settings="$settings"
+        :logo-url="$logoUrl"
+        :ordering-enabled="$orderingEnabled"
+        :menu-index-route="$menuIndexRoute"
+    />
 
     <main class="mx-auto max-w-7xl px-3 py-3 sm:px-4 sm:py-5 md:px-8 md:py-8">
         <x-menu.hero
@@ -27,6 +32,8 @@
             <x-menu.category-nav
                 :categories="$categories"
                 :selected-slug="$selectedSlug"
+                :menu-index-route="$menuIndexRoute"
+                :menu-category-route="$menuCategoryRoute"
             />
 
             <h2 class="mb-3 text-base font-bold text-on-surface sm:mb-4 sm:text-lg md:text-xl">
@@ -39,7 +46,11 @@
                 </p>
             @elseif (! $selectedCategory)
                 <p class="mb-3 max-w-3xl text-xs leading-relaxed text-on-surface-variant sm:mb-5 sm:text-sm md:text-base">
-                    برجر ووجبات سريعة بنكهات حلوة ومالحة — اختر من منيو {{ $restaurantName }} واطلب بسهولة.
+                    @if ($orderingEnabled)
+                        برجر ووجبات سريعة بنكهات حلوة ومالحة — اختر من منيو {{ $restaurantName }} واطلب بسهولة.
+                    @else
+                        تصفح أصناف {{ $restaurantName }} وأسعارها ونكهاتها بكل سهولة.
+                    @endif
                 </p>
             @endif
 
@@ -60,6 +71,7 @@
                             :currency="$currency"
                             :fallback-image="$logoUrl"
                             :restaurant-name="$restaurantName"
+                            :ordering-enabled="$orderingEnabled"
                         />
                     @endforeach
                 </section>
@@ -67,9 +79,17 @@
         @endif
     </main>
 
-    <x-menu.footer :settings="$settings" :categories="$categories" />
+    <x-menu.footer
+        :settings="$settings"
+        :categories="$categories"
+        :home-route="$menuHomeRoute"
+        :menu-index-route="$menuIndexRoute"
+        :menu-category-route="$menuCategoryRoute"
+    />
 
-    <x-menu.sticky-cart />
-    <x-menu.bottom-nav />
-    <x-menu.product-modal :currency="$currency" :fallback-image="$logoUrl" />
+    @if ($orderingEnabled)
+        <x-menu.sticky-cart />
+        <x-menu.bottom-nav :menu-index-route="$menuIndexRoute" />
+        <x-menu.product-modal :currency="$currency" :fallback-image="$logoUrl" />
+    @endif
 @endsection

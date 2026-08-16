@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\RestaurantSetting;
-use App\Support\PublicStorage;
 use App\Support\Seo;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +20,17 @@ class MenuController extends Controller
     {
         $settings = $this->settings();
         $seo = Seo::fromSettings($settings);
+        $orderingEnabled = ! $request->routeIs('menu.display*');
+        $explicitOrderRoute = $request->routeIs('order.*');
+        $menuIndexRoute = $orderingEnabled
+            ? ($explicitOrderRoute ? 'order.index' : 'menu.index')
+            : 'menu.display';
+        $menuCategoryRoute = $orderingEnabled
+            ? ($explicitOrderRoute ? 'order.category' : 'menu.category')
+            : 'menu.display.category';
+        $menuHomeRoute = ($request->routeIs('home') || $request->routeIs('menu.index', 'menu.category'))
+            ? 'home'
+            : $menuIndexRoute;
 
         $querySlug = trim((string) $request->query('category', ''));
 
@@ -28,7 +38,7 @@ class MenuController extends Controller
             $matched = Category::query()->active()->where('slug', $querySlug)->first();
 
             if ($matched) {
-                return redirect()->route('menu.category', $matched, 301);
+                return redirect()->route($menuCategoryRoute, $matched, 301);
             }
         }
 
@@ -62,7 +72,9 @@ class MenuController extends Controller
         if ($selectedCategory) {
             $seoTitle = $seo->categoryTitle($selectedCategory);
             $seoDescription = $seo->categoryDescription($selectedCategory);
-            $seoCanonical = $seo->categoryCanonical($selectedCategory);
+            $seoCanonical = $orderingEnabled
+                ? $seo->categoryCanonical($selectedCategory)
+                : route('menu.display.category', $selectedCategory);
         } elseif ($isHome) {
             $seoTitle = $seo->homeTitle();
             $seoDescription = $seo->homeDescription();
@@ -70,7 +82,9 @@ class MenuController extends Controller
         } else {
             $seoTitle = $seo->menuTitle();
             $seoDescription = $seo->menuDescription();
-            $seoCanonical = $seo->menuCanonical();
+            $seoCanonical = $orderingEnabled
+                ? $seo->menuCanonical()
+                : route('menu.display');
         }
 
         return view('menu.index', [
@@ -79,6 +93,10 @@ class MenuController extends Controller
             'products' => $products,
             'selectedSlug' => $selectedSlug,
             'selectedCategory' => $selectedCategory,
+            'orderingEnabled' => $orderingEnabled,
+            'menuIndexRoute' => $menuIndexRoute,
+            'menuCategoryRoute' => $menuCategoryRoute,
+            'menuHomeRoute' => $menuHomeRoute,
             'currency' => $settings->currency ?: 'ل.س',
             'logoUrl' => $logoUrl,
             'heroUrl' => $settings->heroImageUrl($logoUrl),

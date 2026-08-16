@@ -34,6 +34,7 @@ class QrCodeController extends Controller
 
         return view('admin.qr-code.index', [
             'menuUrl' => $menuUrl,
+            'orderingMenuUrl' => $this->qrCodes->orderingMenuUrl(),
             'qrSvg' => $qrSvg,
             'qrError' => $error,
             'supportsPng' => $this->qrCodes->supportsPng(),

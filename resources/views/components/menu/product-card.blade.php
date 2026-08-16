@@ -3,6 +3,7 @@
     'currency',
     'fallbackImage',
     'restaurantName' => null,
+    'orderingEnabled' => true,
 ])
 
 @php
@@ -14,24 +15,30 @@
 @endphp
 
 <article
-    data-product-card
-    data-product-id="{{ $product->id }}"
-    data-product-name="{{ $product->name }}"
-    data-product-description="{{ $product->description }}"
-    data-product-price="{{ $product->price }}"
-    data-product-badge="{{ $product->badge }}"
-    data-product-image="{{ $imageUrl }}"
-    data-product-fallback="{{ $fallbackImage }}"
-    data-product-currency="{{ $currency }}"
+    @if ($orderingEnabled)
+        data-product-card
+        data-product-id="{{ $product->id }}"
+        data-product-name="{{ $product->name }}"
+        data-product-description="{{ $product->description }}"
+        data-product-price="{{ $product->price }}"
+        data-product-badge="{{ $product->badge }}"
+        data-product-image="{{ $imageUrl }}"
+        data-product-fallback="{{ $fallbackImage }}"
+        data-product-currency="{{ $currency }}"
+    @endif
     class="menu-product-card group flex flex-col overflow-hidden rounded-lg bg-surface-container-lowest ring-1 ring-outline-variant/25 transition duration-200 hover:ring-primary/30 dark:bg-surface-container md:rounded-2xl"
 >
     <div class="menu-product-card__media relative w-full overflow-hidden bg-surface-container">
+        @if ($orderingEnabled)
         <button
             type="button"
             data-open-product
             class="block h-full w-full"
             aria-label="عرض تفاصيل {{ $product->name }}"
         >
+        @else
+        <div class="h-full w-full">
+        @endif
             <img
                 src="{{ $imageUrl }}"
                 alt="{{ $imageAlt }}"
@@ -41,7 +48,11 @@
                 width="400"
                 height="400"
             >
+        @if ($orderingEnabled)
         </button>
+        @else
+        </div>
+        @endif
 
         @if ($product->badge)
             <span class="absolute top-1 right-1 max-w-[85%] truncate rounded md:rounded-md bg-tertiary-container px-1 py-0.5 text-[9px] font-semibold text-on-tertiary-container md:top-3 md:right-3 md:px-2 md:py-1 md:text-[11px]">
@@ -56,7 +67,10 @@
                 {{ $product->name }}
             </h3>
             @if ($product->description)
-                <p class="mt-0.5 hidden text-xs leading-relaxed text-on-surface-variant line-clamp-2 sm:block md:text-sm">
+                <p @class([
+                    'mt-0.5 text-xs leading-relaxed text-on-surface-variant line-clamp-2 md:text-sm',
+                    'hidden sm:block' => $orderingEnabled,
+                ])>
                     {{ $product->description }}
                 </p>
             @endif
@@ -66,6 +80,7 @@
             <span class="min-w-0 truncate text-[11px] font-bold text-primary tabular-nums sm:text-sm md:text-base">
                 {{ $formattedPrice }}
             </span>
+            @if ($orderingEnabled)
             <button
                 type="button"
                 data-open-product
@@ -74,6 +89,7 @@
             >
                 <span class="material-symbols-outlined text-[16px] sm:text-[20px] md:text-[22px]" aria-hidden="true">add</span>
             </button>
+            @endif
         </div>
     </div>
 </article>

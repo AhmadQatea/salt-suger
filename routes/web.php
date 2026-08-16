@@ -29,8 +29,12 @@ Route::get('/media/{path}', [MediaController::class, 'show'])
 |--------------------------------------------------------------------------
 */
 Route::get('/', [MenuController::class, 'index'])->name('home');
+Route::get('/menu/display', [MenuController::class, 'index'])->name('menu.display');
+Route::get('/menu/display/{category:slug}', [MenuController::class, 'index'])->name('menu.display.category');
 Route::get('/menu', [MenuController::class, 'index'])->name('menu.index');
 Route::get('/menu/{category:slug}', [MenuController::class, 'index'])->name('menu.category');
+Route::get('/order', [MenuController::class, 'index'])->name('order.index');
+Route::get('/order/{category:slug}', [MenuController::class, 'index'])->name('order.category');
 
 /*
 |--------------------------------------------------------------------------

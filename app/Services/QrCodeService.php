@@ -25,7 +25,15 @@ class QrCodeService
      */
     public function menuUrl(): string
     {
-        return route('menu.index', absolute: true);
+        return route('menu.display', absolute: true);
+    }
+
+    /**
+     * Absolute URL for the existing ordering experience.
+     */
+    public function orderingMenuUrl(): string
+    {
+        return route('order.index', absolute: true);
     }
 
     /**

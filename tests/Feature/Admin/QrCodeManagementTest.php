@@ -40,7 +40,7 @@ class QrCodeManagementTest extends TestCase
 
     public function test_admin_can_access_qr_page(): void
     {
-        $menuUrl = route('menu.index', absolute: true);
+        $menuUrl = route('menu.display', absolute: true);
 
         $this->actingAs($this->admin())
             ->get(route('admin.qr-code.index'))
@@ -64,7 +64,7 @@ class QrCodeManagementTest extends TestCase
         $service = app(QrCodeService::class);
         $url = $service->menuUrl();
 
-        $this->assertSame('https://menu.example.test/menu', $url);
+        $this->assertSame('https://menu.example.test/menu/display', $url);
         $this->assertStringStartsWith('https://', $url);
         $this->assertStringContainsString('/menu', $url);
         $this->assertStringNotContainsString('/admin', $url);

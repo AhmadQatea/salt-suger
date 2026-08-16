@@ -1,6 +1,8 @@
 @props([
     'categories',
     'selectedSlug' => '',
+    'menuIndexRoute' => 'menu.index',
+    'menuCategoryRoute' => 'menu.category',
 ])
 
 <section
@@ -10,7 +12,7 @@
 >
     <div class="hide-scrollbar flex gap-2 overflow-x-auto whitespace-nowrap pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         <a
-            href="{{ route('menu.index') }}"
+            href="{{ route($menuIndexRoute) }}"
             data-fast-nav
             @class([
                 'ss-chip shrink-0',
@@ -22,7 +24,7 @@
 
         @foreach ($categories as $category)
             <a
-                href="{{ route('menu.category', $category) }}"
+                href="{{ route($menuCategoryRoute, $category) }}"
                 data-fast-nav
                 @class([
                     'ss-chip shrink-0',

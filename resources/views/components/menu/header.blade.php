@@ -2,6 +2,8 @@
     'settings',
     'logoUrl',
     'cartCount' => 0,
+    'orderingEnabled' => true,
+    'menuIndexRoute' => 'menu.index',
 ])
 
 @php
@@ -10,7 +12,7 @@
 
 <header class="sticky top-0 z-40 border-b border-outline-variant/40 bg-surface/95 backdrop-blur-md">
     <div class="mx-auto flex h-12 max-w-7xl items-center justify-between gap-2 px-3 sm:h-14 sm:gap-3 sm:px-4 md:h-16 md:px-8">
-        <a href="{{ route('menu.index') }}" class="flex min-w-0 items-center gap-2 sm:gap-2.5">
+        <a href="{{ route($menuIndexRoute) }}" class="flex min-w-0 items-center gap-2 sm:gap-2.5">
             <img
                 src="{{ $logoUrl }}"
                 alt="شعار {{ $restaurantName }}"
@@ -23,13 +25,14 @@
             </span>
         </a>
 
+        @if ($orderingEnabled)
         <nav aria-label="التنقل الرئيسي" class="hidden items-center gap-1 md:flex">
             <a
-                href="{{ route('menu.index') }}"
+                href="{{ route($menuIndexRoute) }}"
                 @class([
                     'rounded-lg px-3 py-2 text-sm font-semibold transition-colors',
-                    'bg-primary/10 text-primary' => request()->routeIs('home', 'menu.index', 'menu.category'),
-                    'text-on-surface-variant hover:bg-surface-variant hover:text-on-surface' => ! request()->routeIs('home', 'menu.index', 'menu.category'),
+                    'bg-primary/10 text-primary' => request()->routeIs('home', 'menu.*', 'order.*'),
+                    'text-on-surface-variant hover:bg-surface-variant hover:text-on-surface' => ! request()->routeIs('home', 'menu.*', 'order.*'),
                 ])
             >الرئيسية</a>
             <a
@@ -41,9 +44,11 @@
                 ])
             >السلة</a>
         </nav>
+        @endif
 
         <div class="flex shrink-0 items-center gap-1">
             <x-theme-toggle />
+            @if ($orderingEnabled)
             <a
                 href="{{ route('cart.index') }}"
                 class="relative rounded-full p-2 text-on-surface transition-colors hover:bg-surface-variant"
@@ -56,6 +61,7 @@
                     data-cart-count="{{ $cartCount }}"
                 >{{ $cartCount }}</span>
             </a>
+            @endif
         </div>
     </div>
 </header>

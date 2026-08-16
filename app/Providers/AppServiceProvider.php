@@ -36,7 +36,6 @@ class AppServiceProvider extends ServiceProvider
             'checkout.*',
             'orders.*',
         ], function ($view): void {
-            $cart = app(CartService::class);
             $data = $view->getData();
             $settings = ($data['settings'] ?? null) instanceof RestaurantSetting
                 ? $data['settings']
@@ -46,6 +45,15 @@ class AppServiceProvider extends ServiceProvider
                 $view->with('settings', $settings);
             }
 
+            if (request()->routeIs('menu.display*')) {
+                $view->with('cartCount', 0);
+                $view->with('cartSubtotal', '0.00');
+                $view->with('cartCurrency', $settings->currency ?: 'ل.س');
+
+                return;
+            }
+
+            $cart = app(CartService::class);
             $view->with('cartCount', $cart->totalQuantity());
             $view->with('cartSubtotal', $cart->subtotal());
             $view->with('cartCurrency', $settings->currency ?: 'ل.س');

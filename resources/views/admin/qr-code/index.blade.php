@@ -191,7 +191,8 @@
             </div>
 
             <div class="no-print">
-                <label for="menu-url" class="mb-1.5 block font-bold text-on-surface">رابط المينيو</label>
+                <label for="menu-url" class="mb-1.5 block font-bold text-on-surface">رابط منيو العرض</label>
+                <p class="text-sm text-on-surface-variant">منيو للعرض فقط لزبائن المطعم، بدون سلة أو طلب.</p>
                 <div class="qr-url-box">
                     <input
                         id="menu-url"
@@ -204,6 +205,19 @@
                     <button type="button" class="btn-secondary" id="copy-menu-url">نسخ رابط المينيو</button>
                 </div>
                 <p class="qr-copy-status" id="copy-status" aria-live="polite"></p>
+
+                <label for="ordering-menu-url" class="mb-1.5 mt-5 block font-bold text-on-surface">رابط منيو الطلب</label>
+                <p class="text-sm text-on-surface-variant">المنيو الكامل للطلب والتوصيل عبر السلة وواتساب.</p>
+                <div class="qr-url-box">
+                    <input
+                        id="ordering-menu-url"
+                        type="text"
+                        readonly
+                        value="{{ $orderingMenuUrl }}"
+                        dir="ltr"
+                        aria-label="رابط منيو الطلب"
+                    >
+                </div>
 
                 <div class="qr-actions">
                     @if ($qrSvg)
